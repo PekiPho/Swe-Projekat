@@ -282,3 +282,6 @@ E:\angular\swe projekat\Backend\obj\Debug\net8.0\refint\Backend.dll
 E:\angular\swe projekat\Backend\obj\Debug\net8.0\Backend.pdb
 E:\angular\swe projekat\Backend\obj\Debug\net8.0\Backend.genruntimeconfig.cache
 E:\angular\swe projekat\Backend\obj\Debug\net8.0\ref\Backend.dll
+E:\angular\swe projekat\Backend\obj\Debug\net8.0\Backend.sourcelink.json
+E:\angular\swe projekat\Backend\bin\Debug\net8.0\AutoMapper.dll
+E:\angular\swe projekat\Backend\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
