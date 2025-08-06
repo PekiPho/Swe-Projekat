@@ -1,0 +1,13 @@
+bin/
+obj/
+.angular/
+
+.vscode/
+
+node_modules/
+
+dist/
+out-tsc/
+
+*.user
+*.suo

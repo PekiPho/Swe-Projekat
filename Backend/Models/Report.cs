@@ -19,11 +19,11 @@ public class Report
 
     public List<Media>? Media { get; set; }
 
-    public Region Region { get; set; }
+    public Region? Region { get; set; }
 
-    public Severity Severity { get; set; }
+    public Severity? Severity { get; set; }
 
-    public ResolutionStatus ResolutionStatus { get; set; }
+    public ResolutionStatus? ResolutionStatus { get; set; }
 
     public List<Tag> Tags { get; set; } = new List<Tag>();
 

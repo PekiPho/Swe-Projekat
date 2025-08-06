@@ -128,13 +128,13 @@ namespace Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("RegionId")
+                    b.Property<int?>("RegionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ResolutionStatusId")
+                    b.Property<int?>("ResolutionStatusId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SeverityId")
+                    b.Property<int?>("SeverityId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -241,7 +241,7 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -330,21 +330,15 @@ namespace Backend.Migrations
 
                     b.HasOne("Backend.Models.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("RegionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RegionId");
 
                     b.HasOne("Backend.Models.ResolutionStatus", "ResolutionStatus")
                         .WithMany("Reports")
-                        .HasForeignKey("ResolutionStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ResolutionStatusId");
 
                     b.HasOne("Backend.Models.Severity", "Severity")
                         .WithMany("Reports")
-                        .HasForeignKey("SeverityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SeverityId");
 
                     b.Navigation("Region");
 
@@ -359,9 +353,7 @@ namespace Backend.Migrations
                 {
                     b.HasOne("Backend.Models.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });
