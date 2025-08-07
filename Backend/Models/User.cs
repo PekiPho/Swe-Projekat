@@ -15,7 +15,7 @@ public class User
 
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-    public Role Role { get; set; }
+    public Role? Role { get; set; }
 
     public List<Report> Reports { get; set; } = new();
 
