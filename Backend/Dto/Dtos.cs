@@ -10,3 +10,13 @@ public class UpdateUserRequest
 
     public string? NewUsername { get; set; }
 }
+
+public class UpdateReportDto
+{
+    public string? Title { get; set; }
+    public string? Description { get; set; }
+    public string? RegionName { get; set; }
+    public string? SeverityLevel { get; set; }
+    public string? ResolutionStatus { get; set; }
+    public List<string> Tags { get; set; } = new();
+}
