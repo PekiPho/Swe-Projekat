@@ -1,0 +1,149 @@
+/* Base styling for the fixed card container */
+.first.card {
+  width: 100vw;
+  font-size: 2em;
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* background-color removed to make the background image visible */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+/* Styling for the content area within the card */
+.card-body {
+  padding: 1rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Background image styling within the card body */
+.card-body > img.background-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* Flex container for buttons and search bar */
+.d-flex.justify-content-center.gap-3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem; 
+  /* Added a semi-transparent background for better readability over the image */
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 0.6em;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+  width: 6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-outline-primary {
+  color: #007bff;
+  border: 2px solid #007bff;
+  background-color: transparent;
+
+  &:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  &:focus,
+  &:active {
+    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+  }
+}
+
+.btn-outline-primary img {
+  height: 4vw;
+  max-height: 40px; 
+}
+
+/* Search bar styling */
+.search-bar {
+  --size: 70px;
+  --padding: 8px;
+  --expanded-width: 600px;
+  display: flex;
+  justify-content: flex-end;
+  background-color: #fff;
+  box-shadow: 0 10px 10px 0 #d6d9e2;
+  border-radius: 100px;
+  outline: 1px solid transparent;
+  overflow: hidden;
+
+  padding: var(--padding);
+  margin-inline: auto;
+  width: var(--size);
+  height: var(--size);
+  max-width: 100%;
+  transition: width 0.5s, outline 0.5s;
+}
+
+.search-bar:focus-within {
+  width: var(--expanded-width);
+  outline: 1px solid #2e2e2e;
+}
+
+.search-input {
+  font-size: 18px;
+  color: #3a3a3a;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  margin-inline: 1rem;
+  flex: auto;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.search-bar:focus-within .search-input {
+  opacity: 1;
+}
+
+.search-submit {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color changed to transparent to show the image */
+  background-color: transparent;
+  border-radius: 50%;
+  border: none;
+  width: calc(var(--size) - var(--padding) * 2);
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.search-submit:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.search-submit img {
+  height: 4vw;
+  max-height: 40px;
+}
