@@ -2,7 +2,7 @@ namespace Backend.Controllers;
 
 public class SearchController : ControllerBase
 {
-    public ApplContext Context { get; set; }
+    private readonly ApplContext Context;
 
     public SearchController(ApplContext context)
     {

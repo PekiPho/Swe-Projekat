@@ -37,6 +37,11 @@ public class ApplContext : DbContext
         });
 
         modelBuilder.Entity<Report>()
+            .HasOne(r => r.Pin)
+            .WithOne(p => p.Report)
+            .HasForeignKey<Pin>("ReportId");
+
+        modelBuilder.Entity<Report>()
             .HasOne(r => r.User)
             .WithMany(u => u.Reports)
             .HasForeignKey("AuthorId")

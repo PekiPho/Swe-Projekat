@@ -20,3 +20,8 @@ public class UpdateReportDto
     public string? ResolutionStatus { get; set; }
     public List<string> Tags { get; set; } = new();
 }
+
+public class UpdateCommentDto
+{
+    public string? Content { get; set; }
+}

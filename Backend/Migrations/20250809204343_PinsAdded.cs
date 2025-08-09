@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class V101 : Migration
+    public partial class PinsAdded : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -266,7 +266,9 @@ namespace Backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Pins_ReportId",
                 table: "Pins",
-                column: "ReportId");
+                column: "ReportId",
+                unique: true,
+                filter: "[ReportId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reports_AuthorId",

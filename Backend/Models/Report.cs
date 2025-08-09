@@ -25,6 +25,8 @@ public class Report
 
     public ResolutionStatus? ResolutionStatus { get; set; }
 
+    public Pin? Pin { get; set; }
+
     public List<Tag> Tags { get; set; } = new List<Tag>();
 
     public List<User> Followers { get; set; } = new List<User>();

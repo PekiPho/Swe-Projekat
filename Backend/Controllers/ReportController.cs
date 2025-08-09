@@ -9,7 +9,7 @@ namespace Backend.Controllers;
 
 public class ReportController : ControllerBase
 {
-    public ApplContext Context { get; set; }
+    private readonly ApplContext Context;
 
     public ReportController(ApplContext context)
     {

@@ -4,7 +4,7 @@ namespace Backend.Controllers;
 [Route("[controller]")]
 public class MediaController : ControllerBase
 {
-    public ApplContext Context { get; set; }
+    private readonly ApplContext Context;
 
     public MediaController(ApplContext context)
     {

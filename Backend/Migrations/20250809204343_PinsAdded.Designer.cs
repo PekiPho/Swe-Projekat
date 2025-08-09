@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplContext))]
-    [Migration("20250806184457_V1.01")]
-    partial class V101
+    [Migration("20250809204343_PinsAdded")]
+    partial class PinsAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,7 +93,9 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReportId");
+                    b.HasIndex("ReportId")
+                        .IsUnique()
+                        .HasFilter("[ReportId] IS NOT NULL");
 
                     b.ToTable("Pins");
                 });
@@ -318,8 +320,8 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Models.Pin", b =>
                 {
                     b.HasOne("Backend.Models.Report", "Report")
-                        .WithMany()
-                        .HasForeignKey("ReportId");
+                        .WithOne("Pin")
+                        .HasForeignKey("Backend.Models.Pin", "ReportId");
 
                     b.Navigation("Report");
                 });
@@ -396,6 +398,8 @@ namespace Backend.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Media");
+
+                    b.Navigation("Pin");
                 });
 
             modelBuilder.Entity("Backend.Models.ResolutionStatus", b =>

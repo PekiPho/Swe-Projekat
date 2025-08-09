@@ -90,7 +90,9 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReportId");
+                    b.HasIndex("ReportId")
+                        .IsUnique()
+                        .HasFilter("[ReportId] IS NOT NULL");
 
                     b.ToTable("Pins");
                 });
@@ -315,8 +317,8 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Models.Pin", b =>
                 {
                     b.HasOne("Backend.Models.Report", "Report")
-                        .WithMany()
-                        .HasForeignKey("ReportId");
+                        .WithOne("Pin")
+                        .HasForeignKey("Backend.Models.Pin", "ReportId");
 
                     b.Navigation("Report");
                 });
@@ -393,6 +395,8 @@ namespace Backend.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Media");
+
+                    b.Navigation("Pin");
                 });
 
             modelBuilder.Entity("Backend.Models.ResolutionStatus", b =>

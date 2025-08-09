@@ -13,7 +13,7 @@ namespace Backend.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    public ApplContext Context { get; set; }
+    private readonly ApplContext Context;
 
     public UserController(ApplContext context)
     {
