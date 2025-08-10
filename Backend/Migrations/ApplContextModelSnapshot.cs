@@ -185,7 +185,12 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RegionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RegionId");
 
                     b.ToTable("Roles");
                 });
@@ -349,6 +354,15 @@ namespace Backend.Migrations
                     b.Navigation("Severity");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Backend.Models.Role", b =>
+                {
+                    b.HasOne("Backend.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("Backend.Models.User", b =>

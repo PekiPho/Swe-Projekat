@@ -36,6 +36,10 @@ public class ApplContext : DbContext
             entity.HasIndex(e => e.Username).IsUnique();
         });
 
+        modelBuilder.Entity<Role>()
+            .HasIndex(c => c.Name)
+            .IsUnique();
+
         modelBuilder.Entity<Report>()
             .HasOne(r => r.Pin)
             .WithOne(p => p.Report)

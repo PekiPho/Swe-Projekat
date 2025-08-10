@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplContext))]
-    [Migration("20250809204343_PinsAdded")]
-    partial class PinsAdded
+    [Migration("20250810213635_RolesRegion")]
+    partial class RolesRegion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,7 +188,12 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RegionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RegionId");
 
                     b.ToTable("Roles");
                 });
@@ -352,6 +357,15 @@ namespace Backend.Migrations
                     b.Navigation("Severity");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Backend.Models.Role", b =>
+                {
+                    b.HasOne("Backend.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("Backend.Models.User", b =>

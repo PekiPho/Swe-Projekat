@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class PinsAdded : Migration
+    public partial class RolesRegion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,19 +38,6 @@ namespace Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Severity",
                 columns: table => new
                 {
@@ -74,6 +61,25 @@ namespace Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RegionId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Roles_Regions_RegionId",
+                        column: x => x.RegionId,
+                        principalTable: "Regions",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -296,6 +302,11 @@ namespace Backend.Migrations
                 column: "TagsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Roles_RegionId",
+                table: "Roles",
+                column: "RegionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserFollowsReport_UserId",
                 table: "UserFollowsReport",
                 column: "UserId");
@@ -337,9 +348,6 @@ namespace Backend.Migrations
                 name: "Reports");
 
             migrationBuilder.DropTable(
-                name: "Regions");
-
-            migrationBuilder.DropTable(
                 name: "ResolutionStatuses");
 
             migrationBuilder.DropTable(
@@ -350,6 +358,9 @@ namespace Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Regions");
         }
     }
 }

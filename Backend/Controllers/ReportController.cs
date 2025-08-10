@@ -6,7 +6,8 @@ using Newtonsoft.Json;
 
 namespace Backend.Controllers;
 
-
+[ApiController]
+[Route("[controller]")]
 public class ReportController : ControllerBase
 {
     private readonly ApplContext Context;

@@ -1,5 +1,7 @@
 namespace Backend.Controllers;
 
+[ApiController]
+[Route("[controller]")]
 public class SearchController : ControllerBase
 {
     private readonly ApplContext Context;

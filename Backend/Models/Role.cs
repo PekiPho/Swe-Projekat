@@ -8,5 +8,7 @@ public class Role
 
     public required string Name { get; set; }
 
+    public Region? Region { get; set; }
+
     public List<User> Users { get; set; } = new();
 }
