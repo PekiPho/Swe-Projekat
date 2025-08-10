@@ -5,17 +5,17 @@
         <h1 class="title">Register</h1>
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username">
+            <input type="text" class="form-control" id="username" autocomplete="off" placeholder="Username">
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email Address</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" autocomplete="off" placeholder="Email">
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password">
+            <input type="password" class="form-control" id="password" placeholder="Password">
         </div>
-        <div *ngIf="!this.used" class="text-danger">Username is already in use</div>
+        <div *ngIf="!this.used" class="text-danger">Bad data</div>
         <hr>
         <button (click)="addUser()" type="button" class="btn btn-primary">Submit</button>
     </form>

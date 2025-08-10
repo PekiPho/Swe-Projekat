@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
-
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterModule } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-get-started',
@@ -8,6 +8,19 @@ import { RouterLink, RouterModule } from '@angular/router';
   templateUrl: './get-started.html',
   styleUrl: './get-started.scss'
 })
-export class GetStarted {
+export class GetStarted implements OnInit{
 
+  constructor(private userService:UserService, private router:Router){}
+  ngOnInit(): void {
+    this.userService.getEntry().subscribe({
+      next:(data)=>{
+        if(this.router.url.includes('login') || this.router.url.includes('get-started'))
+          this.router.navigate(['./main-page']);
+                   
+      },
+      error:(err)=>{
+        
+      }
+    });
+  }
 }
