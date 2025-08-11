@@ -152,3 +152,29 @@
   height: 4vw;
   max-height: 40px;
 }
+/* Lista predloga */
+.suggestions-list {
+  position: absolute;
+  top: calc(100% + 5px); /* malo ispod search bara */
+  left: 0;
+  width: 100%;
+  max-width: var(--expanded-width);
+  background: #fff;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.suggestions-list li {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(0,0,0,0.05);
+  }
+}
