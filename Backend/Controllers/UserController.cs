@@ -237,10 +237,27 @@ public class UserController : ControllerBase
     [HttpDelete("DeleteUserByUsername/{username}")]
     public async Task<ActionResult> DeleteUserByUsername(string username)
     {
-        var user = await Context.Users.FirstOrDefaultAsync(c => c.Username == username);
+        var user = await Context.Users
+                                .Include(c => c.Reports)
+                                .Include(c => c.Comments)
+                                .Include(c => c.Following)
+                                .FirstOrDefaultAsync(c => c.Username == username);
 
         if (user == null)
             return NotFound("User with given Username NOT found");
+
+        foreach (var report in user.Following.ToList())
+        {
+            report.Followers.Remove(user);
+        }
+
+        if (user.Comments.Any())
+            Context.Comments.RemoveRange(user.Comments);
+
+        foreach (var report in user.Reports.ToList())
+        {
+            await DeleteReportInternal(report.Id);
+        }
 
         Context.Users.Remove(user);
 
@@ -248,5 +265,40 @@ public class UserController : ControllerBase
 
         return Ok("User removed");
     }
+
+    private async Task DeleteReportInternal(Guid reportId)
+    {
+        var report = await Context.Reports.Include(c => c.User)
+                                            .Include(c => c.Media)
+                                            .Include(c => c.Comments)
+                                            .Include(c => c.Followers)
+                                            .Include(c => c.Region)
+                                            .Include(c => c.Tags)
+                                            .Include(c => c.ResolutionStatus)
+                                            .Include(c => c.Severity)
+                                            .FirstOrDefaultAsync(c => c.Id == reportId);
+
+        if (report == null)
+            return;
+
+        if (report.Comments != null && report.Comments.Any())
+            Context.Comments.RemoveRange(report.Comments);
+
+        foreach (var user in report.Followers.ToList())
+            user.Following.Remove(report);
+
+        if (report.User != null)
+            report.User.Reports.Remove(report);
+
+        if (report.Media != null && report.Media.Any())
+            Context.Media.RemoveRange(report.Media);
+
+        if (report.Pin != null)
+            Context.Pins.Remove(report.Pin);
+
+        Context.Reports.Remove(report);
+
+        await Context.SaveChangesAsync();
+    }  
 
 }

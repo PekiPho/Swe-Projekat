@@ -188,6 +188,29 @@ public class ReportController : ControllerBase
     }
 
 
+    [HttpGet("GetFollowersFromReport/{reportId}")]
+    public async Task<ActionResult> GetFollowersFromReport(Guid reportId)
+    {
+        var report = await Context.Reports.Include(c => c.Followers).FirstOrDefaultAsync(c => c.Id == reportId);
+
+        if (report == null)
+            return NotFound("Report Not Found");
+
+        return Ok(report.Followers);
+    }
+
+    [HttpGet("GetFollowedReports/{username}")]
+    public async Task<ActionResult> GetFollowedReports(string username)
+    {
+        var user = await Context.Users.Include(c => c.Following).FirstOrDefaultAsync(c => c.Username == username);
+
+        if (user == null)
+            return NotFound("User Not Found");
+
+        return Ok(user.Following);
+    }
+
+
 
     //Update
 
@@ -246,12 +269,63 @@ public class ReportController : ControllerBase
         return Ok("Report updated successfully");
     }
 
+    [HttpPut("FollowReport/{username}/{reportId}")]
+    public async Task<ActionResult> FollowReport(string username, Guid reportId)
+    {
+        var user = await Context.Users.Include(c => c.Following).FirstOrDefaultAsync(c => c.Username == username);
+
+        if (user == null)
+            return NotFound("User Not Found");
+
+        var report = await Context.Reports.Include(c => c.Followers).FirstOrDefaultAsync(c => c.Id == reportId);
+
+        if (report == null)
+            return NotFound("Report Not Found");
+
+        if (!report.Followers.Contains(user))
+        {
+            report.Followers.Add(user);
+            await Context.SaveChangesAsync();
+        }
+
+        return Ok("User Now Follows Report");
+    }
+
+    [HttpPut("UnfollowReport/{username}/{reportId}")]
+    public async Task<ActionResult> UnfollowReport(string username, Guid reportId)
+    {
+        var user = await Context.Users.Include(c => c.Following).FirstOrDefaultAsync(c => c.Username == username);
+
+        if (user == null)
+            return NotFound("User Not Found");
+
+        var report = await Context.Reports.Include(c => c.Followers).FirstOrDefaultAsync(c => c.Id == reportId);
+
+        if (report == null)
+            return NotFound("Report Not Found");
+
+        if (report.Followers.Contains(user))
+        {
+            report.Followers.Remove(user);
+            await Context.SaveChangesAsync();
+        }
+
+        return Ok("Uset Unfollowed The Report");
+    }
+
     //Delete
 
     [HttpDelete("DeleteReport/{reportId}")]
     public async Task<ActionResult> DeleteReport(Guid reportId)
     {
-        var report = await Context.Reports.Include(c => c.Comments)
+        var report = await Context.Reports.Include(c => c.User)
+                                            .Include(c => c.Media)
+                                            .Include(c => c.Comments)
+                                            .Include(c => c.Followers)
+                                            .Include(c => c.Region)
+                                            .Include(c => c.Tags)
+                                            .Include(c => c.ResolutionStatus)
+                                            .Include(c => c.Severity)
                                             .FirstOrDefaultAsync(c => c.Id == reportId);
 
         if (report == null)
@@ -261,6 +335,21 @@ public class ReportController : ControllerBase
         {
             Context.Comments.RemoveRange(report.Comments);
         }
+
+        foreach (var user in report.Followers.ToList())
+        {
+            user.Following.Remove(report);
+        }
+
+        if (report.User != null)
+            report.User.Reports.Remove(report);
+
+        if (report.Media != null && report.Media.Any())
+            Context.Media.RemoveRange(report.Media);
+
+        if (report.Pin != null)
+            Context.Pins.Remove(report.Pin);
+
 
         Context.Reports.Remove(report);
 
