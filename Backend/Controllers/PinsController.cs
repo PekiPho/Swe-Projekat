@@ -73,10 +73,18 @@ public class PinsController : ControllerBase
     [HttpDelete("DeletePin/{pinId}")]
     public async Task<ActionResult> DeletePin(Guid pinId)
     {
-        var pin = await Context.Pins.FirstOrDefaultAsync(c => c.Id == pinId);
+        var pin = await Context.Pins.Include(c=>c.Report).FirstOrDefaultAsync(c => c.Id == pinId);
 
         if (pin == null)
             return NotFound("Pin Not Found");
+
+        var reports = await Context.Reports.Include(c => c.Pin).Where(c => c.Pin != null && c.Pin.Id == pin.Id).ToListAsync();
+
+        foreach (var report in reports)
+        {
+            report.Pin = null;
+        }
+        await Context.SaveChangesAsync();
 
         Context.Pins.Remove(pin);
         await Context.SaveChangesAsync();

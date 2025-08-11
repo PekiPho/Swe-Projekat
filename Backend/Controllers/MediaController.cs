@@ -90,11 +90,17 @@ public class MediaController : ControllerBase
         try
         {
             var media = await Context.Media.Include(c => c.Report)
-                                        .Where(c => c.Report.Id == reportId)
+                                        .Where(c =>c.Report != null &&  c.Report.Id == reportId)
                                         .ToListAsync();
 
             if (!media.Any())
                 return Ok("No Media Found in the first place");
+
+            foreach (var m in media)
+            {
+                if(m.Report?.Media!=null)
+                    m.Report.Media.Remove(m);
+            }
 
             Context.Media.RemoveRange(media);
 
