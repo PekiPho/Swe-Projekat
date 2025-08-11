@@ -40,7 +40,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.75rem; 
+  gap: 0.75rem;
   /* Added a semi-transparent background for better readability over the image */
   background-color: rgba(255, 255, 255, 0.7);
   padding: 0.5rem;
@@ -68,6 +68,10 @@
   &:hover {
     background-color: #007bff;
     color: #fff;
+    /* This new rule inverts the image colors to make them white */
+    img {
+      filter: invert(100%);
+    }
   }
 
   &:focus,
@@ -79,7 +83,9 @@
 
 .btn-outline-primary img {
   height: 4vw;
-  max-height: 40px; 
+  max-height: 40px;
+  /* Added a transition for a smoother color change on the image */
+  transition: filter 0.2s ease-in-out;
 }
 
 /* Search bar styling */
@@ -129,7 +135,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color changed to transparent to show the image */
   background-color: transparent;
   border-radius: 50%;
   border: none;
