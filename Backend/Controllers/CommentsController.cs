@@ -63,7 +63,7 @@ public class CommentsController : ControllerBase
     {
         var comment = await Context.Comments.Include(c => c.User)
                                             .Include(c => c.Report)
-                                            .FirstOrDefaultAsync(c => c.Id == commentId);
+                                            .FirstOrDefaultAsync(c => !c.IsDeleted  && c.Id == commentId);
 
         if (comment == null)
             return NotFound("Comment Not Found");
