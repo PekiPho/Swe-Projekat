@@ -28,6 +28,7 @@ export class Login {
         next:(data)=>{
           this.checked=true;
           this.user=data;
+          this.userService.setUser(data);
           this.router.navigate(['/main-page']);
         },
         error:(err:HttpResponseBase)=>{
