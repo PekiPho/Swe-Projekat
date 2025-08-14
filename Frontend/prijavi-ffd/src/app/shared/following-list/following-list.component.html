@@ -1,0 +1,11 @@
+
+<div class="following-list-container">
+  <div *ngIf="followingPosts.length === 0" class="empty-list-message">
+    Trenutno ne pratite nijedan post.
+  </div>
+  <app-small-post
+    *ngFor="let post of followingPosts"
+    [post]="post"
+    (postClicked)="onPostClicked($event)">
+  </app-small-post>
+</div>

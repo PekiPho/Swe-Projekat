@@ -1,4 +1,9 @@
-<div class="post" *ngFor="let post of posts">
-  <strong>{{post.title}}</strong>
-  <p>{{post.content}}</p>
+
+<div class="post-list-container">
+  
+  <app-small-post
+    *ngFor="let post of posts"
+    [post]="post"
+    (postClicked)="onPostClicked($event)"
+  ></app-small-post>
 </div>

@@ -1,0 +1,88 @@
+
+<div class="modal-overlay">
+  <div class="modal-content">
+    
+    <button class="close-btn" (click)="onClose()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+   
+    <div class="post-header">
+      <div class="user-info">
+        <h3 class="user-name">{{ post.userName }}</h3>
+        <p class="situation-type">{{ post.situationType }}</p>
+      </div>
+      <div class="post-details">
+        <span class="post-severity severity-{{ post.severity | lowercase }}">
+          {{ post.severity }}
+        </span>
+        <span class="post-place">{{ post.place }}</span>
+        
+        <span *ngIf="post.isResolved" class="post-status-resolved">
+          Resolved
+        </span>
+      </div>
+    </div>
+    
+ 
+    <div class="button-group">
+     
+      <button class="follow-btn" [class.following]="post.isFollowing" (click)="onFollowClick()">
+        <span *ngIf="!post.isFollowing">Follow</span>
+        <span *ngIf="post.isFollowing">Following</span>
+      </button>
+      
+     
+      <button *ngIf="!post.isResolved" class="resolved-btn" (click)="onResolvedClick()">
+        Mark as Resolved
+      </button>
+    </div>
+
+    
+    <div class="post-images">
+      <img
+        *ngFor="let imageUrl of post.imageUrls"
+        [src]="imageUrl"
+        alt="Situation image"
+        class="large-image"
+        onerror="this.src='https://placehold.co/400x250/E9D5FF/6B46C1?text=Image'"
+      />
+    </div>
+
+
+    <div class="post-content">
+      <p class="post-description">
+        {{ post.description }}
+      </p>
+    </div>
+
+    
+    <div class="comment-section">
+      <h3>Comments ({{ post.comments.length }})</h3>
+      <div class="comment-list">
+        
+        <div *ngFor="let comment of post.comments" class="comment-item">
+          <p class="comment-user">
+            <strong>{{ comment.userName }}</strong>
+          </p>
+          <p class="comment-text">{{ comment.text }}</p>
+        </div>
+      </div>
+
+      
+      <form (ngSubmit)="onSubmitComment()">
+        <textarea
+          class="comment-input"
+          placeholder="Write a comment..."
+          [(ngModel)]="newCommentText"
+          name="newCommentText"
+          rows="3"
+        ></textarea>
+        <button type="submit" class="comment-submit-btn">Post Comment</button>
+      </form>
+    </div>
+  </div>
+</div>

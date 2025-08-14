@@ -22,25 +22,30 @@ export interface Comment {
 }
 
 @Component({
-  selector: 'app-post-list',
-  templateUrl: './post-list.component.html',
-  styleUrls: ['./post-list.component.scss']
+  selector: 'app-following-list',
+  templateUrl: './following-list.component.html',
+  styleUrls: ['./following-list.component.scss']
 })
-export class PostListComponent implements OnInit {
+export class FollowingListComponent implements OnInit {
  
-  posts: Post[] = [];
+  allPosts: Post[] = [];
+
+  followingPosts: Post[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
-    
-    this.posts = this.generateRandomPosts(15);
+   
+    this.allPosts = this.generateRandomPosts(10);
+ 
+    this.followingPosts = this.allPosts.filter(post => post.isFollowing);
   }
 
   /**
-   * Generates a specified number of random posts for demonstration.
-   * @param count The number of posts to generate.
-   * @returns An array of randomly generated posts.
+   * Generiše određeni broj nasumičnih postova za demonstraciju.
+   * Neki od njih su nasumično označeni kao praćeni.
+   * @param count Broj postova za generisanje.
+   * @returns Niz nasumično generisanih postova.
    */
   private generateRandomPosts(count: number): Post[] {
     const generatedPosts: Post[] = [];
@@ -63,7 +68,7 @@ export class PostListComponent implements OnInit {
 
     for (let i = 0; i < count; i++) {
       generatedPosts.push({
-        id: `post-${i}`,
+        id: `following-post-${i}`,
         userName: userNames[Math.floor(Math.random() * userNames.length)],
         severity: severities[Math.floor(Math.random() * severities.length)] as 'Low' | 'Medium' | 'High',
         place: `Mesto ${i + 1}`,
@@ -72,6 +77,7 @@ export class PostListComponent implements OnInit {
         imageUrls: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => imagePlaceholders[Math.floor(Math.random() * imagePlaceholders.length)]),
         commentCount: Math.floor(Math.random() * 20),
         comments: [],
+        
         isFollowing: Math.random() > 0.5,
         isResolved: Math.random() > 0.8
       });
@@ -81,11 +87,11 @@ export class PostListComponent implements OnInit {
   }
 
   /**
-   * Handles the postClicked event from the child component.
-   * @param post The post object that was clicked.
+   * Rukuje događajem klika na post iz podkomponente.
+   * @param post Objekat posta na koji je kliknuto.
    */
   onPostClicked(post: Post): void {
-    console.log('Post clicked:', post.id);
+    console.log('Kliknuto na praćeni post:', post.id);
     
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 
 export interface Post {
@@ -22,29 +22,31 @@ export interface Comment {
 }
 
 @Component({
-  selector: 'app-post-list',
-  templateUrl: './post-list.component.html',
-  styleUrls: ['./post-list.component.scss']
+  selector: 'app-user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.scss']
 })
-export class PostListComponent implements OnInit {
- 
-  posts: Post[] = [];
+export class UserListComponent implements OnInit {
+
+  @Output() postClicked = new EventEmitter<Post>();
+
+  userPosts: Post[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
-    
-    this.posts = this.generateRandomPosts(15);
+
+    this.userPosts = this.generateUserPosts(5);
   }
 
   /**
-   * Generates a specified number of random posts for demonstration.
-   * @param count The number of posts to generate.
-   * @returns An array of randomly generated posts.
+   * Generiše nasumične postove za korisnika.
+   * @param count Broj postova za generisanje.
+   * @returns Niz nasumično generisanih postova.
    */
-  private generateRandomPosts(count: number): Post[] {
+  private generateUserPosts(count: number): Post[] {
     const generatedPosts: Post[] = [];
-    const userNames = ['Jovan', 'Marija', 'Petar', 'Ana', 'Marko', 'Elena'];
+    const userNames = ['Miloš'];
     const severities = ['Low', 'Medium', 'High'];
     const situationTypes = ['Saobraćaj', 'Hitna pomoć', 'Krađa', 'Požar', 'Poplava'];
     const descriptions = [
@@ -63,8 +65,8 @@ export class PostListComponent implements OnInit {
 
     for (let i = 0; i < count; i++) {
       generatedPosts.push({
-        id: `post-${i}`,
-        userName: userNames[Math.floor(Math.random() * userNames.length)],
+        id: `user-post-${i}`,
+        userName: userNames[0],
         severity: severities[Math.floor(Math.random() * severities.length)] as 'Low' | 'Medium' | 'High',
         place: `Mesto ${i + 1}`,
         situationType: situationTypes[Math.floor(Math.random() * situationTypes.length)],
@@ -72,7 +74,7 @@ export class PostListComponent implements OnInit {
         imageUrls: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => imagePlaceholders[Math.floor(Math.random() * imagePlaceholders.length)]),
         commentCount: Math.floor(Math.random() * 20),
         comments: [],
-        isFollowing: Math.random() > 0.5,
+        isFollowing: false,
         isResolved: Math.random() > 0.8
       });
     }
@@ -80,12 +82,8 @@ export class PostListComponent implements OnInit {
     return generatedPosts;
   }
 
-  /**
-   * Handles the postClicked event from the child component.
-   * @param post The post object that was clicked.
-   */
+  
   onPostClicked(post: Post): void {
-    console.log('Post clicked:', post.id);
-    
+    this.postClicked.emit(post);
   }
 }
