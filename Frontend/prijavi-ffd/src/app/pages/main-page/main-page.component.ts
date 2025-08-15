@@ -17,4 +17,6 @@ export class MainPageComponent {
     console.log(`Sorting by ${type}`);
     this.sortMenuOpen = false;
   }
+
+  
 }
