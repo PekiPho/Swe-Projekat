@@ -46,7 +46,7 @@ public class ReportController : ControllerBase
 
         if (files != null)
         {
-            var extensions = new List<string> { ".jpg", ".png", "jpeg" };
+            var extensions = new List<string> { ".jpg", ".png", ".jpeg" };
             var ext = Path.GetExtension(files.FileName).ToLowerInvariant();
 
             if (!extensions.Contains(ext))
@@ -64,7 +64,7 @@ public class ReportController : ControllerBase
             };
 
             await Context.Media.AddAsync(media);
-            await Context.SaveChangesAsync();  // Save to get media.Id
+            await Context.SaveChangesAsync();  
 
             var fileName = media.MediaId + ext;
             var filePath = Path.Combine(mediaFolder, fileName);
@@ -96,6 +96,7 @@ public class ReportController : ControllerBase
                                     .Include(c => c.Followers)
                                     .Include(c => c.Region)
                                     .Include(c => c.Tags)
+                                    .Include(c => c.Pin)
                                     .Include(c => c.ResolutionStatus)
                                     .Include(c => c.Severity)
                                     .Where(c => c.User.Username == username)
@@ -120,6 +121,7 @@ public class ReportController : ControllerBase
                                     .Include(c => c.Followers)
                                     .Include(c => c.Region)
                                     .Include(c => c.Tags)
+                                    .Include(c=>c.Pin)
                                     .Include(c => c.ResolutionStatus)
                                     .Include(c => c.Severity)
                                     .Where(c => c.Id == reportId)
@@ -141,6 +143,7 @@ public class ReportController : ControllerBase
                                     .Include(c => c.Followers)
                                     .Include(c => c.Region)
                                     .Include(c => c.Tags)
+                                    .Include(c=>c.Pin)
                                     .Include(c => c.ResolutionStatus)
                                     .Include(c => c.Severity)
                                     .Where(c => c.Followers.Any(a => a.Username == username))
@@ -168,6 +171,7 @@ public class ReportController : ControllerBase
                                 .Include(c => c.Followers)
                                 .Include(c => c.Region)
                                 .Include(c => c.Tags)
+                                .Include(c=>c.Pin)
                                 .Include(c => c.ResolutionStatus)
                                 .Include(c => c.Severity)
                                 .AsQueryable();
@@ -336,6 +340,7 @@ public class ReportController : ControllerBase
                                             .Include(c => c.Followers)
                                             .Include(c => c.Region)
                                             .Include(c => c.Tags)
+                                            .Include(c=>c.Pin)
                                             .Include(c => c.ResolutionStatus)
                                             .Include(c => c.Severity)
                                             .FirstOrDefaultAsync(c => c.Id == reportId);
