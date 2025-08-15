@@ -1,3 +1,6 @@
+using AutoMapper;
+using Backend.Dtos;
+
 namespace Backend.Controllers;
 
 [ApiController]
@@ -6,9 +9,12 @@ public class SearchController : ControllerBase
 {
     private readonly ApplContext Context;
 
-    public SearchController(ApplContext context)
+    private readonly IMapper Mapper;
+
+    public SearchController(ApplContext context, IMapper mapper)
     {
         Context = context;
+        Mapper = mapper;
     }
 
     [HttpGet("OnTypeReports/{query}")]
@@ -20,7 +26,8 @@ public class SearchController : ControllerBase
                                         .Take(5)
                                         .ToListAsync();
 
-        return Ok(reports);
+        var reportsDto = Mapper.Map<List<ReportDto>>(reports);
+        return Ok(reportsDto);
 
     }
 
@@ -42,6 +49,7 @@ public class SearchController : ControllerBase
                                         .Take(50)
                                         .ToListAsync();
 
+        var reportsDto = Mapper.Map<List<ReportDto>>(reports);
         return Ok(reports);
     }
 

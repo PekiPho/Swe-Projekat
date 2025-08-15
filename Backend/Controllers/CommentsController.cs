@@ -1,3 +1,4 @@
+using AutoMapper;
 using Azure;
 using Backend.Dtos;
 
@@ -8,9 +9,12 @@ namespace Backend.Controllers;
 public class CommentsController : ControllerBase
 {
     private readonly ApplContext Context;
-    public CommentsController(ApplContext context)
+
+    private readonly IMapper Mapper;
+    public CommentsController(ApplContext context, IMapper mapper)
     {
         Context = context;
+        Mapper = mapper;
     }
 
     //Create
@@ -54,7 +58,8 @@ public class CommentsController : ControllerBase
                                                 .Take(50)
                                                 .ToListAsync();
 
-        return Ok(comments);
+        var commentsDto=Mapper.Map<List<CommentDto>>(comments);
+        return Ok(commentsDto);
     }
 
 
@@ -68,7 +73,9 @@ public class CommentsController : ControllerBase
         if (comment == null)
             return NotFound("Comment Not Found");
 
-        return Ok(comment);
+
+        var commentDto=Mapper.Map<CommentDto>(comment);
+        return Ok(commentDto);
     }
 
 
@@ -87,7 +94,8 @@ public class CommentsController : ControllerBase
                                                 .Take(50)
                                                 .ToListAsync();
 
-        return Ok(comments);
+        var commentsDto=Mapper.Map<List<CommentDto>>(comments);
+        return Ok(commentsDto);
     }
 
     //Update
@@ -109,7 +117,8 @@ public class CommentsController : ControllerBase
         await Context.SaveChangesAsync();
 
 
-        return Ok(comment);
+        var commentDto=Mapper.Map<CommentDto>(comment);
+        return Ok(commentDto);
     }
 
     //Delete

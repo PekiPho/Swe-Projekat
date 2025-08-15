@@ -3,6 +3,7 @@ using Backend.Models;
 using System.Text.Json;
 using Backend.Dtos;
 using Newtonsoft.Json;
+using AutoMapper;
 
 namespace Backend.Controllers;
 
@@ -12,9 +13,12 @@ public class ReportController : ControllerBase
 {
     private readonly ApplContext Context;
 
-    public ReportController(ApplContext context)
+    private readonly IMapper Mapper;
+
+    public ReportController(ApplContext context, IMapper mapper)
     {
         Context = context;
+        Mapper = mapper;
     }
 
     //Create
@@ -75,7 +79,9 @@ public class ReportController : ControllerBase
             report.Media.Add(media);
         }
 
-        return Ok(report);
+
+        var reportDto = Mapper.Map<ReportDto>(report);
+        return Ok(reportDto);
     }
 
 
@@ -100,8 +106,8 @@ public class ReportController : ControllerBase
 
 
         //var postsDto;
-
-        return Ok(reports);
+        var reportsDto = Mapper.Map<List<ReportDto>>(reports);
+        return Ok(reportsDto);
 
     }
 
@@ -122,7 +128,8 @@ public class ReportController : ControllerBase
         if (report == null)
             return NotFound("Post Not Found");
 
-        return Ok(report);
+        var reportDto = Mapper.Map<ReportDto>(report);
+        return Ok(reportDto);
     }
 
     [HttpGet("GetReportsThatUserIsFollowing/{username}/{page?}")]
@@ -142,7 +149,8 @@ public class ReportController : ControllerBase
                                     .Take(50)
                                     .ToListAsync();
 
-        return Ok(reports);
+        var reportsDto = Mapper.Map<List<ReportDto>>(reports);
+        return Ok(reportsDto);
     }
 
     [HttpGet("GetReportsFiltered/{page?}")]
@@ -184,7 +192,9 @@ public class ReportController : ControllerBase
                                 .Take(50)
                                 .ToListAsync();
 
-        return Ok(reports);
+
+        var reportsDto = Mapper.Map<List<ReportDto>>(reports);
+        return Ok(reportsDto);
     }
 
 
@@ -206,8 +216,10 @@ public class ReportController : ControllerBase
 
         if (user == null)
             return NotFound("User Not Found");
+        
 
-        return Ok(user.Following);
+        var reportsDto = Mapper.Map<List<ReportDto>>(user.Following);
+        return Ok(reportsDto);
     }
 
 
