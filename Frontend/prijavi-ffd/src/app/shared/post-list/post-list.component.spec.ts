@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {Report} from '../../../interfaces/report'; 
 import { PostListComponent } from './post-list.component';
 
 describe('PostListComponent', () => {

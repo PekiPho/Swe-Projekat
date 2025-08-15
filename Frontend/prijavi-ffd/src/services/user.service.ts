@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
 import { User } from '../interfaces/user';
+import { Report } from '../interfaces/report';
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +51,14 @@ export class UserService {
 
   }
   
-  
+  getReportsByUser(username: string) {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http.get<Report[]>(`${this.url}/User/GetReportsByUser/${username}`, { headers });
+  }
 }
+

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
-
+import { Report } from '../interfaces/report';
 @Injectable({
   providedIn: 'root'
 })
@@ -47,18 +47,20 @@ getFollowersFromReport(reportId:string){
 getFollowedReports(username:string){
   return this.http.get<Report[]>(`${this.url}/Report/GetFollowedReports/${username}`);
 }
-getReportsFiltered(page: number = 1,
+getReportsFiltered(
+  page: number = 1,
   tags?: string[],
   severityLevel?: string,
   resolutionStatus?: string,
-  region?: string){
-    let params = new HttpParams().set('page', page.toString());
+  region?: string
+) {
+  let params = new HttpParams();
 
   if (tags?.length) params = params.set('tags', tags.join(','));
   if (severityLevel) params = params.set('severityLevel', severityLevel);
   if (resolutionStatus) params = params.set('resolutionStatus', resolutionStatus);
   if (region) params = params.set('region', region);
 
-  return this.http.get<Report[]>(`${this.url}/Report/GetReportsFiltered`, { params });
+  return this.http.get<Report[]>(`${this.url}/Report/GetReportsFiltered/${page}`, { params });
 }
 }

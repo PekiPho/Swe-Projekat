@@ -5,13 +5,14 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { User } from '../../interfaces/user';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
-  imports: [FormsModule, RouterLink, RouterModule, NgIf],
+  imports: [FormsModule, RouterLink, RouterModule, NgIf,  CommonModule],
 })
 export class NavbarComponent implements OnInit{
   currentUser: User | null = null;
@@ -19,6 +20,7 @@ export class NavbarComponent implements OnInit{
 ngOnInit() {
   this.userService.userr$.subscribe(user => {
     this.currentUser = user;
+    console.log(this.currentUser);
   });
 }
   searchQuery = '';
