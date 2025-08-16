@@ -1,20 +1,65 @@
-.size{
-    width: 100vw;
-    height: 100vh;
-}
-.first{
-    background-color: rgb(211,211,211);
-}
-.btn-outline-primary{
-    background-color: white !important;
-  color: #0d6efd !important;        
-  border-color: #0d6efd;           
 
-  &:hover {
-    background-color: #0d6efd !important; 
-    color: white !important;              
+
+.following-container {
+  margin-top: 60px;
+  padding: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 10px;
   }
 }
-.tekst{
-    font-size: 1rem;
+
+.report-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #fcfcfc;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+}
+
+.report-card h3 {
+  color: #0d6efd;
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.report-card p {
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.message {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+.btn-outline-primary {
+  background-color: white !important;
+  color: #0d6efd !important;
+  border-color: #0d6efd;
+
+  &:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+  }
+}
+
+.tekst {
+  font-size: 1rem;
 }

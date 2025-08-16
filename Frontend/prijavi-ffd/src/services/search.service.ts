@@ -1,16 +1,12 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Report {
-  id: number;
-  title: string;
-  // dodaj ostala polja ako su potrebna
-}
+import { Report } from '../interfaces/report';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
-  private baseUrl = 'https://localhost:5001/Search'; // prilagodi URL
+  private baseUrl = 'https://localhost:5001/Search'; 
 
   constructor(private http: HttpClient) {}
 
