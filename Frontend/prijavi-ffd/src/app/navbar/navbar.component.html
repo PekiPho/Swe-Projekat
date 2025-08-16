@@ -27,7 +27,7 @@
         </button>
 
         
-        <ul *ngIf="suggestions.length > 0" class="suggestions-list">
+        <!-- <ul *ngIf="suggestions.length > 0" class="suggestions-list">
           <li 
             *ngFor="let s of suggestions" 
             (click)="selectSuggestion(s.title)"
@@ -35,7 +35,7 @@
           >
             {{ s.title }}
           </li>
-        </ul>
+        </ul> -->
       </div>
 
       <a routerLink="/following-page" class="btn btn-outline-primary" style="width: 6rem;">

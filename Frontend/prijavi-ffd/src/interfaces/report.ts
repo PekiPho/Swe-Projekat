@@ -1,7 +1,7 @@
 
 import { User } from './user';
 import { Comment } from './comment';
-import { Media } from './media';
+import { Media, Pin } from './media';
 
 export interface Report {
   id: string;
@@ -17,4 +17,13 @@ export interface Report {
   pinId: string | null;
   tagNames: string[] | null;
   followerUsernames: string[] | null;
+}
+
+export interface ReportToSend{
+  title:string;
+  description:string;
+  tagNames:string;
+  severityLevel:string;
+  regionName:string;
+  pin?:Pin;
 }

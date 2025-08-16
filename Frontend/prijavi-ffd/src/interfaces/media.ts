@@ -4,7 +4,7 @@ export interface Media {
     reportId:string;
 }
 export interface Pin {
-  id: string;
+  id?: string;
   latitude: number;
   longitude: number;
   report?: Report | null;
