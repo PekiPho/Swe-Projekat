@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllers();
 
