@@ -48,7 +48,7 @@ public class ReportController : ControllerBase
         report.Media = report.Media ?? new List<Media>();
 
 
-        if (report.Tags != null && report.Tags.Any())
+        if (reportDto.TagNames != null && reportDto.TagNames.Any())
         {
             var existing = await Context.Tags.Where(c => reportDto.TagNames.Contains(c.Name)).ToListAsync();
 
