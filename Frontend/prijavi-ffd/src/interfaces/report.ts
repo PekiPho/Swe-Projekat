@@ -11,19 +11,18 @@ export interface Report {
   username: string | null;
   commentIds: string[] | null;
   mediaIds: string[] | null;
-  regionName: string | null;
-  severityLevel: string | null;
+  region: string | null;
+  severity: string | null;
   resolutionStatus: string | null;
   pinId: string | null;
-  tagNames: string[] | null;
+  tags: string[] | null;
   followerUsernames: string[] | null;
 }
 
-export interface ReportToSend{
-  title:string;
-  description:string;
-  tagNames:string;
-  severityLevel:string;
-  regionName:string;
-  pin?:Pin;
-}
+export interface ReportToSend{ 
+  title:string; 
+  description:string; 
+  tagNames:string[]; 
+  severityLevel:string; 
+  regionName:string; 
+  pin?:Pin; }

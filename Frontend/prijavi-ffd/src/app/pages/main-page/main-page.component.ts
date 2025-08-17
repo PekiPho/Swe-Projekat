@@ -103,7 +103,7 @@ saveReport() {
   const reportData: ReportToSend = {
     title,
     description,
-    tagNames: selectedTags.join(","),
+     tagNames: selectedTags,
     regionName: region ? region.name : "",
     severityLevel: severity ? severity.level : ""
   };
