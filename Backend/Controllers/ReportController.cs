@@ -34,12 +34,32 @@ public class ReportController : ControllerBase
         if (user == null)
             return NotFound("User Not Found");
 
-        var report = JsonConvert.DeserializeObject<Report>(reportJson);
-        if (report == null)
+        var reportDto = JsonConvert.DeserializeObject<ReportDtoToAdd>(reportJson);
+        if (reportDto == null)
             return BadRequest("Report Not Found");
 
-        report.User = user;
+        var report = new Report
+        {
+            Title = reportDto.Title,
+            Description = reportDto.Description,
+            User = user
+        };
+
         report.Media = report.Media ?? new List<Media>();
+
+
+        if (report.Tags != null && report.Tags.Any())
+        {
+            var existing = await Context.Tags.Where(c => reportDto.TagNames.Contains(c.Name)).ToListAsync();
+
+            report.Tags = existing;
+        }
+
+        var severity = await Context.Severity.FirstOrDefaultAsync(c => c.Level == reportDto.SeverityLevel);
+        report.Severity = severity;
+
+        var region = await Context.Regions.FirstOrDefaultAsync(c => c.Name == reportDto.RegionName);
+        report.Region = region;
 
         await Context.Reports.AddAsync(report);
         await Context.SaveChangesAsync();
@@ -80,8 +100,8 @@ public class ReportController : ControllerBase
         }
 
 
-        var reportDto = Mapper.Map<ReportDto>(report);
-        return Ok(reportDto);
+        var reportD = Mapper.Map<ReportDto>(report);
+        return Ok(reportD);
     }
 
 

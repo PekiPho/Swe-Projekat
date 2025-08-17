@@ -100,3 +100,14 @@ public class ReportDto
 
     public List<string>? FollowerUsernames { get; set; }
 }
+
+
+public class ReportDtoToAdd
+{
+    public string Title { get; set; } = null!;
+    public string Description { get; set; } = null!;
+    public List<string> TagNames { get; set; } = new();
+    public string SeverityLevel { get; set; } = null!;
+    public string RegionName { get; set; } = null!;
+    public Pin? Pin { get; set; }
+}
