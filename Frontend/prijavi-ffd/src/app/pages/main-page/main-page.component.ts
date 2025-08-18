@@ -128,6 +128,7 @@ export class MainPageComponent implements OnInit{
       error: (err) => {
         console.error("Error saving report:", err);
       }
+<<<<<<< HEAD
     });
   }
   
@@ -142,6 +143,15 @@ export class MainPageComponent implements OnInit{
         if(!role){
           console.log("rola ne postoji!");
           return;
+=======
+      this.roleService.giveUserARole(this.user!.username,this.roleNameInput).subscribe({
+        next:()=>{
+          this.roleNameInput = '';
+          console.log("Uspesno dodata rola");
+        },
+        error:(err)=>{
+          console.error(err);
+>>>>>>> d0429a6848a4643a97e9e36c75d8ec549b25de3a
         }
         this.roleService.giveUserARole(this.user!.username,this.roleNameInput).subscribe({
           next:()=>{
