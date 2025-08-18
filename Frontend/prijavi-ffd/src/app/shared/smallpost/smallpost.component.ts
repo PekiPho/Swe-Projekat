@@ -1,62 +1,41 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-
-
-export interface Post {
-  id: string;
-  userName: string;
-  severity: 'Low' | 'Medium' | 'High';
-  place: string;
-  situationType: string;
-  description: string;
-  imageUrls: string[];
-  commentCount: number;
-  comments: Comment[];
-  isFollowing: boolean;
-  isResolved: boolean;
-}
-
-
-export interface Comment {
-  userName: string;
-  text: string;
-}
+import { Report } from '../../../interfaces/report';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-small-post',
-  templateUrl: './small-post.component.html',
-  styleUrls: ['./small-post.component.scss'],
+  selector: 'app-small-post',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './smallpost.component.html',
+  styleUrls: ['./smallpost.component.scss'],
 })
 export class SmallPostComponent {
-  
-  @Input() post: Post = {
-    id: '',
-    userName: '',
-    severity: 'Low',
-    place: '',
-    situationType: '',
-    description: '',
-    imageUrls: [],
-    commentCount: 0,
-    comments: [],
-    isFollowing: false,
-    isResolved: false
-  };
+  
+  @Input() report!: Report;
 
-  
-  @Output() postClicked = new EventEmitter<Post>();
+  @Output() reportClicked = new EventEmitter<Report>();
 
-  
-  @Output() followClicked = new EventEmitter<{ postId: string, isFollowing: boolean }>();
+  @Output() followClicked = new EventEmitter<{ reportId: string, isFollowing: boolean }>();
 
-  
-  onPostClick(): void {
-    this.postClicked.emit(this.post);
-  }
+  
+  onReportClick(): void {
+    this.reportClicked.emit(this.report);
+  }
 
-  
-  onFollowClick(event: Event): void {
-    event.stopPropagation(); 
-    this.post.isFollowing = !this.post.isFollowing;
-    this.followClicked.emit({ postId: this.post.id, isFollowing: this.post.isFollowing });
-  }
+  
+  onFollowClick(event: Event): void {
+    event.stopPropagation(); 
+    
+    const isFollowing = this.isUserFollowing();
+    if (isFollowing) {
+      this.report.followerUsernames = this.report.followerUsernames!.filter(username => username !== 'currentUser');
+    } else {
+      this.report.followerUsernames!.push('currentUser');
+    }
+    this.followClicked.emit({ reportId: this.report.id, isFollowing: !isFollowing });
+  }
+  
+  isUserFollowing(): boolean {
+    return this.report && this.report.followerUsernames ? this.report.followerUsernames.includes('currentUser') : false;
+  }
 }
