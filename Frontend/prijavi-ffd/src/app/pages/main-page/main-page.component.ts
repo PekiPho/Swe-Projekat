@@ -137,6 +137,7 @@ addRole(){
       this.roleService.giveUserARole(this.user!.username,this.roleNameInput).subscribe({
         next:()=>{
           this.roleNameInput = '';
+          console.log("Uspesno dodata rola");
         },
         error:(err)=>{
           console.error(err);
