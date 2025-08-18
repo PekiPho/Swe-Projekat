@@ -8,10 +8,12 @@ import { CommonModule } from '@angular/common';
 import { Region, Severity, Tag } from '../../../interfaces/media';
 import { HttpClient } from '@angular/common/http';
 import { FilterService } from '../../../services/filter.service';
+import { FormsModule } from '@angular/forms';
+import { RoleService } from '../../../services/role.service';
 
 @Component({
   selector: 'app-main-page',
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, FormsModule],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
 })
@@ -50,8 +52,9 @@ export class MainPageComponent implements OnInit{
   tags: Tag[] = [];
   regions: Region[] = [];
   severities: Severity[] = [];
+  roleNameInput:string ='';
 
-  constructor(private reportService:ReportService, private userService:UserService, private http:HttpClient, private filterService:FilterService){}
+  constructor(private reportService:ReportService, private userService:UserService, private http:HttpClient, private filterService:FilterService, private roleService:RoleService){}
 
   loadAllOptions(): void {
   this.filterService.loadTags().subscribe({
@@ -118,5 +121,41 @@ saveReport() {
       console.error("Error saving report:", err);
     }
   });
+}
+addRole(){
+  if(!this.roleNameInput){
+    console.log("Unesite rolu!");
+    return;
+  }
+
+  this.roleService.getRoleByName(this.roleNameInput).subscribe({
+    next:(role)=>{
+      if(!role){
+        console.log("rola ne postoji!");
+        return;
+      }
+      this.roleService.giveUserARole(this.user!.username,this.roleNameInput).subscribe({
+        next:()=>{
+          this.roleNameInput = '';
+        },
+        error:(err)=>{
+          console.error(err);
+        }
+      });
+    },
+    error:(err)=>{
+      console.error(err);
+    }
+  })
+}
+removeRole(){
+  this.roleService.removeRoleFromUser(this.user!.username).subscribe({
+    next:()=>{
+      console.log("uspesno uklonjena rola");
+    },
+    error:(err)=>{
+      console.error(err);
+    }
+  })
 }
 }
