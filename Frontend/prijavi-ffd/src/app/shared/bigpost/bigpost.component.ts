@@ -8,11 +8,12 @@ import { switchMap, catchError, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../../interfaces/user';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Dodajemo FormsModule
 
 @Component({
   selector: 'app-big-post',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule], // Dodajemo FormsModule
   templateUrl: './bigpost.component.html',
   styleUrls: ['./bigpost.component.scss'],
 })
