@@ -1,9 +1,70 @@
-
 <div class="post-list-container">
-  
-  <app-small-post
-    *ngFor="let post of posts"
-    [post]="post"
-    (postClicked)="onPostClicked($event)"
-  ></app-small-post>
+  <div class="header-section">
+    <h2>Sve objave</h2>
+    <div class="sort-controls">
+      <label for="sort-select">Sortiraj prema:</label>
+      <select id="sort-select" [(ngModel)]="selectedSortOption" (change)="onSortChange()">
+        <option value="newest">Najnovije</option>
+        <option value="resolved">Riješeno</option>
+        <option value="unresolved">Neriješeno</option>
+        <option value="critical">Kritično</option>
+        <option value="low">Niska ozbiljnost</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Filteri:</label>
+      <select [(ngModel)]="selectedSeverity" (change)="onFilterChange($event, 'severity')">
+        <option [ngValue]="null">Sve ozbiljnosti</option>
+        <option *ngFor="let severity of severities" [ngValue]="severity.level">{{ severity.level }}</option>
+      </select>
+      <select [(ngModel)]="selectedRegion" (change)="onFilterChange($event, 'region')">
+        <option [ngValue]="null">Sve regije</option>
+        <option *ngFor="let region of regions" [ngValue]="region.name">{{ region.name }}</option>
+      </select>
+    </div>
+    <div class="filter-group tag-filters">
+      <label>Oznake:</label>
+      <div class="tag-list">
+        <label *ngFor="let tag of tags">
+          <input 
+            type="checkbox" 
+            [value]="tag.name" 
+            (change)="onFilterChange($event, 'tags')"
+            [checked]="selectedTags.includes(tag.name)"
+          > {{ tag.name }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="reports$ | async as reports; else loading">
+    <div *ngIf="reports.length > 0; else noReports" class="reports-grid">
+      <app-small-post
+        *ngFor="let report of reports"
+        [report]="report"
+        (reportClicked)="onReportClicked(report)">
+      </app-small-post>
+    </div>
+
+    <ng-template #noReports>
+      <div class="message">
+        <p>Nema objava za prikaz.</p>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="message">
+      <p>Učitavanje objava...</p>
+    </div>
+  </ng-template>
 </div>
+
+<app-big-post
+  *ngIf="selectedReport"
+  [report]="selectedReport"
+  (close)="onCloseBigPost()">
+</app-big-post>

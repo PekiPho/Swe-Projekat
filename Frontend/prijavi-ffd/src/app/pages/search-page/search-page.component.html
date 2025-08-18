@@ -1,3 +1,23 @@
 <app-navbar></app-navbar>
 
+<div class="search-page-container">
+  <h2>Rezultati pretrage za: "{{ searchQuery }}"</h2>
+  
+  <ng-container *ngIf="reports$ | async as reports; else loading">
+    <div *ngIf="reports.length > 0; else noResults" class="reports-grid">
+      <app-post-list></app-post-list>
+    </div>
+    
+    <ng-template #noResults>
+      <div class="message">
+        <p>Nema rezultata za vašu pretragu.</p>
+      </div>
+    </ng-template>
+  </ng-container>
 
+  <ng-template #loading>
+    <div class="message">
+      <p>Učitavanje rezultata...</p>
+    </div>
+  </ng-template>
+</div>

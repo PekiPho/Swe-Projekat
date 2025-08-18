@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../navbar/navbar.component';
 import { CommonModule, DatePipe } from '@angular/common'; 
 import { UserService } from '../../../services/user.service'; 
+import { ReportService } from '../../../services/report.service'; 
 import { Report } from '../../../interfaces/report';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -21,7 +22,7 @@ export class ProfilePageComponent implements OnInit {
   
   selectedReport: Report | null = null;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private reportService: ReportService) {
     this.userReports$ = of(null);
   }
 
@@ -29,7 +30,7 @@ export class ProfilePageComponent implements OnInit {
     const user = this.userService.userSource.value;
 
     if (user && user.username) {
-      this.userReports$ = this.userService.getReportsByUser(user.username).pipe(
+      this.userReports$ = this.reportService.getReportsFromUser(user.username).pipe(
         catchError(error => {
           console.error('Greška pri dohvatanju objava:', error);
           return of([]);

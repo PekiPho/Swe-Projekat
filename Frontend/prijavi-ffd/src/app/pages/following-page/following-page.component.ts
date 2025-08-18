@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../navbar/navbar.component';
 import { CommonModule, DatePipe } from '@angular/common'; 
 import { UserService } from '../../../services/user.service'; 
-import { ReportService } from '../../../services/report.service';
-import { CommentService } from '../../../services/comment.service'; 
+import { ReportService } from '../../../services/report.service'; // Koristite ReportService
 import { Report } from '../../../interfaces/report';
 import { Comment } from '../../../interfaces/comment';
 import { Media } from '../../../interfaces/media';
@@ -29,8 +28,7 @@ export class FollowingPageComponent implements OnInit {
 
   constructor(
     private userService: UserService, 
-    private reportService: ReportService,
-    private commentService: CommentService
+    private reportService: ReportService // Ubrizgajte ReportService
   ) {
     this.followingReports$ = of(null);
   }
@@ -39,7 +37,7 @@ export class FollowingPageComponent implements OnInit {
     const user = this.userService.userSource.value;
 
     if (user && user.username) {
-      this.followingReports$ = this.userService.getReportsThatUserIsFollowing(user.username).pipe(
+      this.followingReports$ = this.reportService.getReportsThatUserIsFollowing(user.username).pipe(
         catchError(error => {
           console.error('Greška pri dohvatanju praćenih objava:', error);
           return of([]);
@@ -52,11 +50,9 @@ export class FollowingPageComponent implements OnInit {
   
   onReportClicked(report: Report): void {
     this.selectedReport = report;
-   
   }
 
   onCloseBigPost(): void {
     this.selectedReport = null;
-  
   }
 }

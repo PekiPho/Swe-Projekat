@@ -3,8 +3,8 @@
 <div class="profile-container">
   <h2>Moje objave</h2>
 
-  <ng-container *ngIf="userReports$ | async as reports">
-    <div *ngIf="reports && reports.length > 0; else noReports" class="reports-list">
+  <ng-container *ngIf="userReports$ | async as reports; else loadingOrError">
+    <div *ngIf="reports.length > 0; else noReports" class="reports-list">
       <app-small-post
         *ngFor="let report of reports"
         [report]="report"
@@ -19,11 +19,11 @@
     </ng-template>
   </ng-container>
 
-  <ng-container *ngIf="(userReports$ | async) === null">
+  <ng-template #loadingOrError>
     <div class="message">
       <p>Učitavanje objava...</p>
     </div>
-  </ng-container>
+  </ng-template>
 
 </div>
 
