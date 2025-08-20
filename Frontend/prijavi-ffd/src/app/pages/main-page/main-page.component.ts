@@ -108,7 +108,7 @@ export class MainPageComponent implements OnInit {
   }
 
   saveReport() {
-    
+    // Dodana provjera je li korisnik null
     if (!this.user || !this.user.username) {
       console.error('Korisnik nije prijavljen ili nema korisničko ime.');
       return;
