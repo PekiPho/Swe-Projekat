@@ -19,26 +19,42 @@ import { PostListComponent } from '../../shared/post-list/post-list.component';
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
 })
-export class MainPageComponent implements OnInit{
+export class MainPageComponent implements OnInit {
+  
   selectedRegion: number | null = null;
   selectedSeverity: number | null = null;
   sortMenuOpen = false;
-  user:User|null = null;
-  
+  user: User | null = null;
+  createReport = false;
+  title: string = '';
+  text: string = '';
+  tags: Tag[] = [];
+  regions: Region[] = [];
+  severities: Severity[] = [];
+  roleNameInput: string = '';
+
+  constructor(
+    private reportService: ReportService,
+    private userService: UserService,
+    private http: HttpClient,
+    private filterService: FilterService,
+    private roleService: RoleService
+  ) {}
+
   ngOnInit(): void {
     this.userService.userr$.subscribe({
-      next:(u)=>{
-       this.user=u
+      next: (u) => {
+        this.user = u;
       }
-    })
+    });
   }
 
-  createReport=false;
   showReportModal() {
     console.log('Dugme kliknuto!'); 
     this.createReport = true;
     this.loadAllOptions();
   }
+
   closeReportModal() {
     this.createReport = false;
   }
@@ -51,15 +67,6 @@ export class MainPageComponent implements OnInit{
     console.log(`Sorting by ${type}`);
     this.sortMenuOpen = false;
   }
-
-  title:string='';
-  text:string='';
-  tags: Tag[] = [];
-  regions: Region[] = [];
-  severities: Severity[] = [];
-  roleNameInput:string ='';
-
-  constructor(private reportService:ReportService, private userService:UserService, private http:HttpClient, private filterService:FilterService, private roleService:RoleService){}
 
   loadAllOptions(): void {
     this.filterService.loadTags().subscribe({
@@ -101,6 +108,13 @@ export class MainPageComponent implements OnInit{
   }
 
   saveReport() {
+    
+    if (!this.user || !this.user.username) {
+      console.error('Korisnik nije prijavljen ili nema korisničko ime.');
+      return;
+    }
+    
+
     const title = (document.getElementById('title') as HTMLInputElement).value;
     const description = (document.getElementById('description') as HTMLTextAreaElement).value;
 
@@ -120,7 +134,7 @@ export class MainPageComponent implements OnInit{
     };
 
     console.log("Report data:", reportData);
-    this.reportService.addReport(this.user!.username, reportData, this.selectedFile ?? undefined).subscribe({
+    this.reportService.addReport(this.user.username, reportData, this.selectedFile ?? undefined).subscribe({
       next: (res) => {
         console.log("Report saved in DB:", res);
         this.closeReportModal();
@@ -128,54 +142,44 @@ export class MainPageComponent implements OnInit{
       error: (err) => {
         console.error("Error saving report:", err);
       }
-<<<<<<< HEAD
     });
   }
   
-  addRole(){
-    if(!this.roleNameInput){
+  addRole() {
+    if (!this.user || !this.user.username) {
+      console.error("Korisnik nije prijavljen.");
+      return;
+    }
+    
+    if (!this.roleNameInput) {
       console.log("Unesite rolu!");
       return;
     }
 
-    this.roleService.getRoleByName(this.roleNameInput).subscribe({
-      next:(role)=>{
-        if(!role){
-          console.log("rola ne postoji!");
-          return;
-=======
-      this.roleService.giveUserARole(this.user!.username,this.roleNameInput).subscribe({
-        next:()=>{
-          this.roleNameInput = '';
-          console.log("Uspesno dodata rola");
-        },
-        error:(err)=>{
-          console.error(err);
->>>>>>> d0429a6848a4643a97e9e36c75d8ec549b25de3a
-        }
-        this.roleService.giveUserARole(this.user!.username,this.roleNameInput).subscribe({
-          next:()=>{
-            this.roleNameInput = '';
-          },
-          error:(err)=>{
-            console.error(err);
-          }
-        });
+    this.roleService.giveUserARole(this.user.username, this.roleNameInput).subscribe({
+      next: () => {
+        this.roleNameInput = '';
+        console.log("Uspješno dodana rola.");
       },
-      error:(err)=>{
-        console.error(err);
+      error: (err) => {
+        console.error('Greška pri dodavanju role:', err);
       }
-    })
+    });
   }
   
-  removeRole(){
-    this.roleService.removeRoleFromUser(this.user!.username).subscribe({
-      next:()=>{
-        console.log("uspesno uklonjena rola");
+  removeRole() {
+    if (!this.user || !this.user.username) {
+      console.error("Korisnik nije prijavljen.");
+      return;
+    }
+    
+    this.roleService.removeRoleFromUser(this.user.username).subscribe({
+      next: () => {
+        console.log("Uspješno uklonjena rola.");
       },
-      error:(err)=>{
-        console.error(err);
+      error: (err) => {
+        console.error('Greška pri uklanjanju role:', err);
       }
-    })
+    });
   }
 }

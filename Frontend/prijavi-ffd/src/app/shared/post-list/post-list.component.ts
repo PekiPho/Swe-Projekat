@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+// src/app/pages/shared/post-list/post-list.component.ts
+
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ReportService } from '../../../services/report.service';
 import { FilterService } from '../../../services/filter.service';
 import { Report } from '../../../interfaces/report';
@@ -17,7 +19,10 @@ import { Region, Severity, Tag } from '../../../interfaces/media';
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.scss']
 })
-export class PostListComponent implements OnInit {
+export class PostListComponent implements OnInit, OnChanges {
+  
+  // Ovo svojstvo će primiti rezultate od roditeljske komponente (npr. SearchPageComponent)
+  @Input() reportsFromParent: Report[] | null = null;
   
   reports$: Observable<Report[] | null> = of(null);
   selectedReport: Report | null = null;
@@ -37,8 +42,18 @@ export class PostListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadFilters();
-    this.getReports();
+    // Provera da li je komponenta na main-page
+    if (!this.reportsFromParent) {
+      this.loadFilters();
+      this.getReports();
+    }
+  }
+
+  // Ova metoda se poziva kada se promeni @Input() svojstvo (npr. na search-page)
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['reportsFromParent'] && changes['reportsFromParent'].currentValue !== undefined) {
+      this.reports$ = of(this.reportsFromParent);
+    }
   }
 
   loadFilters(): void {
@@ -59,21 +74,33 @@ export class PostListComponent implements OnInit {
   }
 
   getReports(): void {
-    let sortOptions: { [key: string]: { severityLevel?: string, resolutionStatus?: string } } = {
-      'newest': {},
-      'resolved': { resolutionStatus: 'Resolved' },
-      'unresolved': { resolutionStatus: 'Unresolved' },
-      'critical': { severityLevel: 'Critical' },
-      'low': { severityLevel: 'Low' }
-    };
-    
-    const options = sortOptions[this.selectedSortOption] || {};
-    
+    let severityLevel: string | undefined = this.selectedSeverity || undefined;
+    let resolutionStatus: string | undefined = undefined;
+
+    switch (this.selectedSortOption) {
+      case 'resolved':
+        resolutionStatus = 'Resolved';
+        break;
+      case 'unresolved':
+        resolutionStatus = 'Unresolved';
+        break;
+      case 'critical':
+        severityLevel = 'Critical';
+        break;
+      case 'low':
+        severityLevel = 'Low';
+        break;
+      default:
+        // 'newest' ili drugi, bez posebnog statusa/severity
+        break;
+    }
+
     this.reports$ = this.reportService.getReportsFiltered(
       1, 
       this.selectedTags.length > 0 ? this.selectedTags : undefined,
-      this.selectedSeverity || options.severityLevel || undefined,
-      this.selectedRegion || options.resolutionStatus || undefined
+      severityLevel,
+      this.selectedRegion || undefined,
+      resolutionStatus
     ).pipe(
       catchError(err => {
         console.error('Došlo je do greške prilikom dobavljanja izveštaja:', err);
@@ -99,13 +126,13 @@ export class PostListComponent implements OnInit {
 
   onFilterChange(event: Event, filterType: 'severity' | 'region' | 'tags'): void {
     this.selectedSortOption = ''; 
+    const value = (event.target as HTMLInputElement).value;
 
     if (filterType === 'severity') {
-      this.selectedSeverity = (event.target as HTMLSelectElement).value;
+      this.selectedSeverity = value;
     } else if (filterType === 'region') {
-      this.selectedRegion = (event.target as HTMLSelectElement).value;
+      this.selectedRegion = value;
     } else if (filterType === 'tags') {
-      const value = (event.target as HTMLInputElement).value;
       if ((event.target as HTMLInputElement).checked) {
         this.selectedTags.push(value);
       } else {

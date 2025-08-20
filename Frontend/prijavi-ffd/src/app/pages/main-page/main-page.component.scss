@@ -1,14 +1,15 @@
 .report-container {
-    display: flex;
-    justify-content: center;
-    padding-top: 150px;
+  display: flex;
+  justify-content: center;
+  padding-top: 150px;
 }
 
 .card {
-    transition: 0.2s;
+  transition: 0.2s;
 }
+
 .card:hover {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .custom-modal {
@@ -34,11 +35,14 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.modal-header, .modal-body, .modal-footer {
+.modal-header,
+.modal-body,
+.modal-footer {
   margin-bottom: 15px;
 }
 
-input, textarea {
+input,
+textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -47,7 +51,8 @@ input, textarea {
   box-sizing: border-box;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   border-color: #0066cc;
   outline: none;
 }
@@ -99,6 +104,7 @@ button.save {
 button.save:hover {
   background-color: #004d99;
 }
+
 .tag-container {
   display: flex;
   flex-direction: column;
@@ -113,16 +119,17 @@ button.save:hover {
 .tag-label {
   font-size: 16px;
   margin-right: 10px;
-  flex: 1; 
+  flex: 1;
 }
 
 .tag-checkbox {
   width: 20px;
   height: 20px;
 }
+
 .top-actions {
   position: fixed;
-  top: 130px;   /* ovde povećaš dok ne legne tačno ispod navbara */
+  top: 130px;
   right: 30px;
   display: flex;
   gap: 10px;
