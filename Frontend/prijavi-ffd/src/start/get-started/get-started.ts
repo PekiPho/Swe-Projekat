@@ -16,6 +16,7 @@ export class GetStarted implements OnInit{
       next:(data)=>{
         var user = JSON.parse(data);
         this.userService.setUser(user);
+        console.log(user);
         if(this.router.url.includes('login') || this.router.url.includes('get-started'))
           this.router.navigate(['./main-page']);
                    

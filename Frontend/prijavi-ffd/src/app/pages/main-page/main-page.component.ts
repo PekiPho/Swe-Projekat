@@ -128,45 +128,37 @@ export class MainPageComponent implements OnInit{
       error: (err) => {
         console.error("Error saving report:", err);
       }
-<<<<<<< HEAD
     });
   }
   
-  addRole(){
-    if(!this.roleNameInput){
-      console.log("Unesite rolu!");
-      return;
-    }
+  addRole() {
+  if (!this.roleNameInput) {
+    console.log("Unesite rolu!");
+    return;
+  }
 
-    this.roleService.getRoleByName(this.roleNameInput).subscribe({
-      next:(role)=>{
-        if(!role){
-          console.log("rola ne postoji!");
-          return;
-=======
-      this.roleService.giveUserARole(this.user!.username,this.roleNameInput).subscribe({
-        next:()=>{
+  this.roleService.getRoleByName(this.roleNameInput).subscribe({
+    next: (role) => {
+      if (!role) {
+        console.log("rola ne postoji!");
+        return;
+      }
+
+      this.roleService.giveUserARole(this.user!.username, this.roleNameInput).subscribe({
+        next: () => {
           this.roleNameInput = '';
           console.log("Uspesno dodata rola");
         },
-        error:(err)=>{
+        error: (err) => {
           console.error(err);
->>>>>>> d0429a6848a4643a97e9e36c75d8ec549b25de3a
         }
-        this.roleService.giveUserARole(this.user!.username,this.roleNameInput).subscribe({
-          next:()=>{
-            this.roleNameInput = '';
-          },
-          error:(err)=>{
-            console.error(err);
-          }
-        });
-      },
-      error:(err)=>{
-        console.error(err);
-      }
-    })
-  }
+      });
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+}
   
   removeRole(){
     this.roleService.removeRoleFromUser(this.user!.username).subscribe({
