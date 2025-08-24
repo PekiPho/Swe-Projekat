@@ -108,7 +108,6 @@ export class MainPageComponent implements OnInit {
   }
 
   saveReport() {
-    // Dodana provjera je li korisnik null
     if (!this.user || !this.user.username) {
       console.error('Korisnik nije prijavljen ili nema korisničko ime.');
       return;
@@ -174,15 +173,10 @@ export class MainPageComponent implements OnInit {
   });
 }
   
-  removeRole() {
-    if (!this.user || !this.user.username) {
-      console.error("Korisnik nije prijavljen.");
-      return;
-    }
-    
-    this.roleService.removeRoleFromUser(this.user.username).subscribe({
-      next: () => {
-        console.log("Uspješno uklonjena rola.");
+  removeRole(){
+    this.roleService.removeRoleFromUser(this.user!.username).subscribe({
+      next:()=>{
+        console.log("uspesno uklonjena rola");
       },
       error: (err) => {
         console.error('Greška pri uklanjanju role:', err);
