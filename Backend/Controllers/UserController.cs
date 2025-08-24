@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Backend.Dtos;
+using AutoMapper;
 
 namespace Backend.Controllers;
 
@@ -15,9 +16,12 @@ public class UserController : ControllerBase
 {
     private readonly ApplContext Context;
 
-    public UserController(ApplContext context)
+    private readonly IMapper Mapper;
+
+    public UserController(ApplContext context, IMapper mapper)
     {
         Context = context;
+        Mapper = mapper;
     }
 
     //Create
@@ -77,12 +81,18 @@ public class UserController : ControllerBase
         if (userId == null)
             return Unauthorized("No userId");
 
-        var user = await Context.Users.FindAsync(int.Parse(userId));
+        var user = await Context.Users
+                            .Include(c => c.Comments)
+                            .Include(c => c.Role)
+                            .Include(c => c.Reports)
+                            .Include(c=>c.Following)
+                            .FirstOrDefaultAsync(c=>c.Id==int.Parse(userId));
 
         if (user == null)
             return NotFound("User NOT found");
 
-        return Ok(user);
+        var userDto = Mapper.Map<UserDto>(user);
+        return Ok(userDto);
     }
 
     [HttpGet("GetUserById/{id}")]
