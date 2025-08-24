@@ -1,19 +1,21 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Report } from '../../../interfaces/report';
-import { Comment } from '../../../interfaces/comment';
-import { Media } from '../../../interfaces/media';
 import { CommentService } from '../../../services/comment.service';
-import { Observable, of } from 'rxjs';
+import { UserService } from '../../../services/user.service';
+import { Observable, of, Subscription } from 'rxjs'; 
 import { switchMap, catchError, tap } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { User } from '../../../interfaces/user';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Dodajemo FormsModule
+import { FormsModule } from '@angular/forms'; 
+
+// Importi tvojih interfejsa
+import { Report } from '../../../interfaces/report';
+import { User } from '../../../interfaces/user';
+import { Media } from '../../../interfaces/media';
+import { Comment } from '../../../interfaces/comment';
 
 @Component({
   selector: 'app-big-post',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Dodajemo FormsModule
+  imports: [CommonModule, FormsModule],
   templateUrl: './bigpost.component.html',
   styleUrls: ['./bigpost.component.scss'],
 })
@@ -22,26 +24,38 @@ export class BigPostComponent implements OnInit {
   @Input() report!: Report;
 
   @Output() close = new EventEmitter<void>();
-
   @Output() followClicked = new EventEmitter<{ reportId: string, isFollowing: boolean }>();
-
   @Output() resolvedClicked = new EventEmitter<{ reportId: string, isResolved: boolean }>();
 
   public comments$: Observable<Comment[]> = of([]);
   public media$: Observable<Media[]> = of([]);
   public newCommentText: string = '';
+  
+  private currentUserUsername: string | null = null;
+  private userSubscription: Subscription | undefined;
 
-  constructor(private commentService: CommentService, private http: HttpClient) {}
+  constructor(private commentService: CommentService, private userService: UserService) {}
 
   ngOnInit(): void {
     if (this.report) {
       this.comments$ = this.commentService.getCommentsFromReport(this.report.id).pipe(
         catchError(err => {
+          console.error('Error loading comments:', err);
           return of([]);
         })
       );
 
       this.media$ = this.getMediaFromReport(this.report.mediaIds || []);
+    }
+
+    this.userSubscription = this.userService.userr$.subscribe(user => {
+      this.currentUserUsername = user?.username || null;
+    });
+  }
+  
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 
@@ -68,16 +82,18 @@ export class BigPostComponent implements OnInit {
     if (this.report && this.report.followerUsernames) {
       const isFollowing = this.isUserFollowing();
       if (isFollowing) {
-        this.report.followerUsernames = this.report.followerUsernames.filter(username => username !== 'currentUser');
+        this.report.followerUsernames = this.report.followerUsernames.filter(username => username !== this.currentUserUsername);
       } else {
-        this.report.followerUsernames.push('currentUser');
+        if (this.currentUserUsername) {
+          this.report.followerUsernames.push(this.currentUserUsername);
+        }
       }
       this.followClicked.emit({ reportId: this.report.id, isFollowing: !isFollowing });
     }
   }
 
   isUserFollowing(): boolean {
-    return this.report && this.report.followerUsernames ? this.report.followerUsernames.includes('currentUser') : false;
+    return this.report && this.report.followerUsernames && this.currentUserUsername ? this.report.followerUsernames.includes(this.currentUserUsername) : false;
   }
 
   onResolvedClick(): void {
@@ -86,15 +102,15 @@ export class BigPostComponent implements OnInit {
   }
 
   onSubmitComment(): void {
-    if (this.newCommentText.trim()) {
-      const currentUserUsername = 'Current User';
+    if (this.newCommentText.trim() && this.currentUserUsername) {
       const newCommentContent = { content: this.newCommentText.trim() };
       
-      this.commentService.createComment(currentUserUsername, this.report.id, newCommentContent)
+      this.commentService.createComment(this.currentUserUsername, this.report.id, newCommentContent)
         .pipe(
           switchMap(() => this.commentService.getCommentsFromReport(this.report.id)),
           tap(() => this.newCommentText = ''),
           catchError(err => {
+            console.error('Error submitting comment:', err);
             return of([]);
           })
         )
@@ -103,6 +119,8 @@ export class BigPostComponent implements OnInit {
             this.comments$ = of(updatedComments);
           }
         });
+    } else {
+      console.error('Komentar ne može biti prazan ili korisnik nije prijavljen.');
     }
   }
 }

@@ -35,7 +35,7 @@ public class ReportController : ControllerBase
             return NotFound("User Not Found");
 
         var reportDto = JsonConvert.DeserializeObject<ReportDtoToAdd>(reportJson);
-        if (reportDto == null)
+        if (reportDto == null) 
             return BadRequest("Report Not Found");
 
         var report = new Report
