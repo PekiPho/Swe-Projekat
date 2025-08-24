@@ -88,7 +88,12 @@ public class UserController : ControllerBase
     [HttpGet("GetUserById/{id}")]
     public async Task<ActionResult> GetUserById(int id)
     {
-        var user = await Context.Users.FindAsync(id);
+        var user = await Context.Users
+                            .Include(c => c.Comments)
+                            .Include(c => c.Role)
+                            .Include(c => c.Reports)
+                            .Include(c=>c.Following)
+                            .FirstOrDefaultAsync(c=>c.Id==id);
 
         if (user == null)
         {
