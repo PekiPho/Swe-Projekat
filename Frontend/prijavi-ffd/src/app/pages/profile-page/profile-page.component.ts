@@ -1,24 +1,28 @@
-
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../navbar/navbar.component';
 import { CommonModule, DatePipe } from '@angular/common'; 
 import { UserService } from '../../../services/user.service'; 
+import { ReportService } from '../../../services/report.service'; 
 import { Report } from '../../../interfaces/report';
 import { Observable, of } from 'rxjs';
-import { switchMap, filter, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { SmallPostComponent } from '../../shared/smallpost/smallpost.component';
+import { BigPostComponent } from '../../shared/bigpost/bigpost.component';
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [NavbarComponent, CommonModule, DatePipe],
+  imports: [NavbarComponent, CommonModule, DatePipe, SmallPostComponent, BigPostComponent],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.scss'
 })
 export class ProfilePageComponent implements OnInit {
   
   userReports$: Observable<Report[] | null>;
+  
+  selectedReport: Report | null = null;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private reportService: ReportService) {
     this.userReports$ = of(null);
   }
 
@@ -26,7 +30,7 @@ export class ProfilePageComponent implements OnInit {
     const user = this.userService.userSource.value;
 
     if (user && user.username) {
-      this.userReports$ = this.userService.getReportsByUser(user.username).pipe(
+      this.userReports$ = this.reportService.getReportsFromUser(user.username).pipe(
         catchError(error => {
           console.error('Greška pri dohvatanju objava:', error);
           return of([]);
@@ -35,5 +39,13 @@ export class ProfilePageComponent implements OnInit {
     } else {
       this.userReports$ = of([]);
     }
+  }
+
+  onReportClicked(report: Report): void {
+    this.selectedReport = report;
+  }
+
+  onCloseBigPost(): void {
+    this.selectedReport = null;
   }
 }

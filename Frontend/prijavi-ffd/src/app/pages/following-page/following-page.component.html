@@ -4,12 +4,12 @@
   <h2>Objave koje pratim</h2>
 
   <ng-container *ngIf="followingReports$ | async as reports">
-    <div *ngIf="reports && reports.length > 0; else noReports">
-      <div *ngFor="let report of reports" class="report-card">
-        <h3>{{ report.title }}</h3>
-        <p>{{ report.description }}</p>
-        <p>Datum objave: {{ report.dateOfPost | date }}</p>
-      </div>
+    <div *ngIf="reports && reports.length > 0; else noReports" class="reports-list">
+      <app-small-post
+        *ngFor="let report of reports"
+        [report]="report"
+        (reportClicked)="onReportClicked(report)">
+      </app-small-post>
     </div>
   
     <ng-template #noReports>
@@ -19,13 +19,16 @@
     </ng-template>
   </ng-container>
 
-  <ng-container *ngIf="followingReports$ | async as reports else loading">
-  </ng-container>
-
-  <ng-template #loading>
+  <ng-container *ngIf="(followingReports$ | async) === null">
     <div class="message">
       <p>Učitavanje objava...</p>
     </div>
-  </ng-template>
+  </ng-container>
 
 </div>
+
+<app-big-post
+  *ngIf="selectedReport"
+  [report]="selectedReport"
+  (close)="onCloseBigPost()">
+</app-big-post>

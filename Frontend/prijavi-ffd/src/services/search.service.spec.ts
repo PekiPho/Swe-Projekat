@@ -1,16 +1,21 @@
-import { TestBed } from '@angular/core/testing';
 
-import { SearchService } from './search.service';
 
-describe('SearchService', () => {
-  let service: SearchService;
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Report } from '../interfaces/report';
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(SearchService);
-  });
+@Injectable({ providedIn: 'root' })
+export class SearchService {
+  private baseUrl = 'https://localhost:7080/Search'; 
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+  constructor(private http: HttpClient) {}
+
+  onTypeReports(query: string): Observable<Report[]> {
+    return this.http.get<Report[]>(`${this.baseUrl}/OnTypeReports/${query}`);
+  }
+
+  searchReports(query: string, page: number = 1): Observable<Report[]> {
+    return this.http.get<Report[]>(`${this.baseUrl}/SearchReports/${query}/${page}`);
+  }
+}

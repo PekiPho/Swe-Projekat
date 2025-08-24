@@ -11,7 +11,6 @@
         <img src="home.png" alt="Home" style="height:4vw">
       </a>
 
-    
       <div class="search-bar" style="position: relative;">
         <input 
           type="search" 
@@ -26,16 +25,15 @@
           <img src="search.png" alt="S" style="height:4vw">
         </button>
 
-        
-        <!-- <ul *ngIf="suggestions.length > 0" class="suggestions-list">
+        <ul *ngIf="suggestions.length > 0" class="suggestions-list">
           <li 
             *ngFor="let s of suggestions" 
-            (click)="selectSuggestion(s.title)"
+            (click)="selectSuggestion(s.title || '')"
             style="cursor:pointer"
           >
             {{ s.title }}
           </li>
-        </ul> -->
+        </ul>
       </div>
 
       <a routerLink="/following-page" class="btn btn-outline-primary" style="width: 6rem;">

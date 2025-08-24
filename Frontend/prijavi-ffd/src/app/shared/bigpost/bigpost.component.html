@@ -1,4 +1,3 @@
-
 <div class="modal-overlay">
   <div class="modal-content">
     
@@ -9,43 +8,43 @@
       </svg>
     </button>
 
-   
-    <div class="post-header">
+    
+    <div class="report-header">
       <div class="user-info">
-        <h3 class="user-name">{{ post.userName }}</h3>
-        <p class="situation-type">{{ post.situationType }}</p>
+        <h3 class="user-name">{{ report.username }}</h3>
+        <p class="report-title">{{ report.title }}</p>
       </div>
-      <div class="post-details">
-        <span class="post-severity severity-{{ post.severity | lowercase }}">
-          {{ post.severity }}
+      <div class="report-details">
+        <span class="report-severity severity-{{ report.severity | lowercase }}">
+          {{ report.severity }}
         </span>
-        <span class="post-place">{{ post.place }}</span>
+        <span class="report-place">{{ report.region }}</span>
         
-        <span *ngIf="post.isResolved" class="post-status-resolved">
+        <span *ngIf="report.resolutionStatus === 'Resolved'" class="report-status-resolved">
           Resolved
         </span>
       </div>
     </div>
     
- 
+   
     <div class="button-group">
-     
-      <button class="follow-btn" [class.following]="post.isFollowing" (click)="onFollowClick()">
-        <span *ngIf="!post.isFollowing">Follow</span>
-        <span *ngIf="post.isFollowing">Following</span>
+      
+      <button class="follow-btn" [class.following]="isUserFollowing()" (click)="onFollowClick()">
+        <span *ngIf="!isUserFollowing()">Follow</span>
+        <span *ngIf="isUserFollowing()">Following</span>
       </button>
       
-     
-      <button *ngIf="!post.isResolved" class="resolved-btn" (click)="onResolvedClick()">
+      
+      <button *ngIf="report.resolutionStatus !== 'Resolved'" class="resolved-btn" (click)="onResolvedClick()">
         Mark as Resolved
       </button>
     </div>
 
     
-    <div class="post-images">
+    <div class="report-images">
       <img
-        *ngFor="let imageUrl of post.imageUrls"
-        [src]="imageUrl"
+        *ngFor="let m of (media$ | async)"
+        [src]="m.url"
         alt="Situation image"
         class="large-image"
         onerror="this.src='https://placehold.co/400x250/E9D5FF/6B46C1?text=Image'"
@@ -53,22 +52,22 @@
     </div>
 
 
-    <div class="post-content">
-      <p class="post-description">
-        {{ post.description }}
+    <div class="report-content">
+      <p class="report-description">
+        {{ report.description }}
       </p>
     </div>
 
     
     <div class="comment-section">
-      <h3>Comments ({{ post.comments.length }})</h3>
+      <h3>Comments ({{ (comments$ | async)?.length || 0 }})</h3>
       <div class="comment-list">
         
-        <div *ngFor="let comment of post.comments" class="comment-item">
+        <div *ngFor="let comment of (comments$ | async)" class="comment-item">
           <p class="comment-user">
-            <strong>{{ comment.userName }}</strong>
+            <strong>{{ comment.user?.username }}</strong>
           </p>
-          <p class="comment-text">{{ comment.text }}</p>
+          <p class="comment-text">{{ comment.content }}</p>
         </div>
       </div>
 

@@ -1,3 +1,17 @@
 <app-navbar></app-navbar>
 
+<div class="search-page-container">
+  <h2>Rezultati pretrage za: "{{ searchQuery }}"</h2>
+  
+  <ng-container *ngIf="reports$ | async as reports">
+    <div class="reports-grid">
+      <app-post-list [reportsFromParent]="reports"></app-post-list>
+    </div>
+  </ng-container>
 
+  <ng-template #loading>
+    <div class="message">
+      <p>Učitavanje rezultata...</p>
+    </div>
+  </ng-template>
+</div>
