@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="top-actions">
+<div class="top-actions"  *ngIf="isAdmin">
   <input type="text" [(ngModel)]="roleNameInput" placeholder="Role" class="form-control me-2" style="width: 150px;">
   <button class="btn btn-success me-2" (click)="addRole()">Add Role</button>
   <button class="btn btn-danger" (click)="removeRole()">Remove Role</button>

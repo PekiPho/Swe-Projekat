@@ -143,7 +143,9 @@ export class MainPageComponent implements OnInit {
       }
     });
   }
-  
+  get isAdmin(): boolean{
+    return this.user?.roleName?.includes('admin')??false;
+  }
   addRole() {
   if (!this.roleNameInput) {
     console.log("Unesite rolu!");
