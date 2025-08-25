@@ -11,6 +11,7 @@ import { Report } from '../../../interfaces/report';
 import { User } from '../../../interfaces/user';
 import { Media } from '../../../interfaces/media';
 import { Comment } from '../../../interfaces/comment';
+import { ReportService } from '../../../services/report.service';
 
 @Component({
   selector: 'app-big-post',
@@ -34,7 +35,7 @@ export class BigPostComponent implements OnInit {
   private currentUserUsername: string | null = null;
   private userSubscription: Subscription | undefined;
 
-  constructor(private commentService: CommentService, private userService: UserService) {}
+  constructor(private commentService: CommentService, private userService: UserService, private reportService:ReportService) {}
 
   ngOnInit(): void {
     if (this.report) {
@@ -122,5 +123,14 @@ export class BigPostComponent implements OnInit {
     } else {
       console.error('Komentar ne može biti prazan ili korisnik nije prijavljen.');
     }
+  }
+
+  onDeleteClick(){
+    this.reportService.deleteReport(this.report.id).subscribe({
+      next:()=>{
+        console.log('report deleted');
+      },
+      error:(err)=>console.error(err)
+    });
   }
 }

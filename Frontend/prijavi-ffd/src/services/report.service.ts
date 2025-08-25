@@ -112,9 +112,7 @@ export class ReportService {
     );
   }
 
-  deleteReport(reportId: string): Observable<any> {
-    return this.http.delete(`${this.url}/DeleteReport/${reportId}`).pipe(
-      catchError(this.handleError)
-    );
-  }
+  deleteReport(reportId: string): Observable<string> {
+  return this.http.delete(`${this.url}/DeleteReport/${reportId}`,{responseType: 'text'});
+}
 }
