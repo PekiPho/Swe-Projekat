@@ -18,3 +18,21 @@
 .tekst{
     font-size: 1rem;
 }
+@media (max-width: 430px) {
+  .size {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .tekst {
+    font-size: 0.9rem;
+    padding: 0 1rem; 
+    text-align: center;
+  }
+
+  .btn-outline-primary {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

@@ -8,3 +8,25 @@
 .first{
     background-color: rgb(211,211,211);
 }
+@media only screen and (max-width: 430px) {
+    .first {
+        width: 80% !important;
+        padding: 1.5rem !important;
+    }
+
+    .title {
+        font-size: 1.5rem !important;
+        text-align: center !important;
+    }
+
+    input.form-control {
+        font-size: 1rem !important;
+        padding: 0.5rem !important;
+    }
+
+    button.btn {
+        width: 100% !important;
+        padding: 0.6rem !important;
+        font-size: 1rem !important;
+    }
+}
