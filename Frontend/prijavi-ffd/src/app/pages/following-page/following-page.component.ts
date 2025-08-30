@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../navbar/navbar.component';
 import { CommonModule, DatePipe } from '@angular/common'; 
 import { UserService } from '../../../services/user.service'; 
-import { ReportService } from '../../../services/report.service'; // Koristite ReportService
+import { ReportService } from '../../../services/report.service'; 
 import { Report } from '../../../interfaces/report';
 import { Comment } from '../../../interfaces/comment';
 import { Media } from '../../../interfaces/media';
@@ -28,7 +28,7 @@ export class FollowingPageComponent implements OnInit {
 
   constructor(
     private userService: UserService, 
-    private reportService: ReportService // Ubrizgajte ReportService
+    private reportService: ReportService 
   ) {
     this.followingReports$ = of(null);
   }

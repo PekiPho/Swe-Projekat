@@ -6,7 +6,7 @@ import { switchMap, catchError, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 
-// Importi tvojih interfejsa
+
 import { Report } from '../../../interfaces/report';
 import { User } from '../../../interfaces/user';
 import { Media } from '../../../interfaces/media';

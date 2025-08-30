@@ -1,49 +1,47 @@
 <div class="modal-overlay">
   <div class="modal-content">
-    
+
     <button class="close-btn" (click)="onClose()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </button>
 
-    
     <div class="report-header">
       <div class="user-info">
         <h3 class="user-name">{{ report.username }}</h3>
         <p class="report-title">{{ report.title }}</p>
       </div>
-      <div class="report-details">
-        <span class="report-severity severity-{{ report.severity | lowercase }}">
-          {{ report.severity }}
-        </span>
-        <span class="report-place">{{ report.region }}</span>
-        
-        <span *ngIf="report.resolutionStatus === 'Resolved'" class="report-status-resolved">
-          Resolved
-        </span>
+
+      <div class="details-and-buttons">
+        <div class="report-details">
+          <span class="report-severity severity-{{ report.severity | lowercase }}">
+            {{ report.severity }}
+          </span>
+          <span class="report-place">{{ report.region }}</span>
+          <span *ngIf="report.resolutionStatus === 'Resolved'" class="report-status-resolved">
+            Resolved
+          </span>
+        </div>
+
+        <div class="button-group">
+          <button class="follow-btn" [class.following]="isUserFollowing()" (click)="onFollowClick()">
+            <span *ngIf="!isUserFollowing()">Follow</span>
+            <span *ngIf="isUserFollowing()">Following</span>
+          </button>
+
+          <button *ngIf="report.resolutionStatus !== 'Resolved'" class="resolved-btn" (click)="onResolvedClick()">
+            Mark as Resolved
+          </button>
+        </div>
       </div>
-    </div>
-    
-   
-    <div class="button-group">
-      
-      <button class="follow-btn" [class.following]="isUserFollowing()" (click)="onFollowClick()">
-        <span *ngIf="!isUserFollowing()">Follow</span>
-        <span *ngIf="isUserFollowing()">Following</span>
-      </button>
-      
-      
-      <button *ngIf="report.resolutionStatus !== 'Resolved'" class="resolved-btn" (click)="onResolvedClick()">
-        Mark as Resolved
-      </button>
     </div>
 
     <div class="delete-actions">
       <button type="button" class="comment-delete-btn" (click)="onDeleteClick()">Delete</button>
     </div>
-    
+
     <div class="report-images">
       <img
         *ngFor="let m of (media$ | async)"
@@ -54,27 +52,19 @@
       />
     </div>
 
-
     <div class="report-content">
-      <p class="report-description">
-        {{ report.description }}
-      </p>
+      <p class="report-description">{{ report.description }}</p>
     </div>
 
-    
     <div class="comment-section">
       <h3>Comments ({{ (comments$ | async)?.length || 0 }})</h3>
       <div class="comment-list">
-        
         <div *ngFor="let comment of (comments$ | async)" class="comment-item">
-          <p class="comment-user">
-            <strong>{{ comment.user?.username }}</strong>
-          </p>
+          <p class="comment-user"><strong>{{ comment.user?.username }}</strong></p>
           <p class="comment-text">{{ comment.content }}</p>
         </div>
       </div>
 
-      
       <form (ngSubmit)="onSubmitComment()">
         <textarea
           class="comment-input"
@@ -84,7 +74,6 @@
           rows="3"
         ></textarea>
         <button type="submit" class="comment-submit-btn">Post Comment</button>
-        
       </form>
     </div>
   </div>

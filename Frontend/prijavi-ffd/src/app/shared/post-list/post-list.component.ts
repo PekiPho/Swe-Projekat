@@ -21,7 +21,7 @@ import { Region, Severity, Tag } from '../../../interfaces/media';
 })
 export class PostListComponent implements OnInit, OnChanges {
   
-  // Ovo svojstvo će primiti rezultate od roditeljske komponente (npr. SearchPageComponent)
+  
   @Input() reportsFromParent: Report[] | null = null;
   
   reports$: Observable<Report[] | null> = of(null);
@@ -42,14 +42,14 @@ export class PostListComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-    // Provera da li je komponenta na main-page
+
     if (!this.reportsFromParent) {
       this.loadFilters();
       this.getReports();
     }
   }
 
-  // Ova metoda se poziva kada se promeni @Input() svojstvo (npr. na search-page)
+ 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reportsFromParent'] && changes['reportsFromParent'].currentValue !== undefined) {
       this.reports$ = of(this.reportsFromParent);
@@ -91,7 +91,7 @@ export class PostListComponent implements OnInit, OnChanges {
         severityLevel = 'Low';
         break;
       default:
-        // 'newest' ili drugi, bez posebnog statusa/severity
+        
         break;
     }
 
