@@ -5,8 +5,7 @@ import { ReportService } from '../../../services/report.service';
 import { Observable, of, Subscription, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
-
+import { FormsModule } from '@angular/forms';
 import { Report } from '../../../interfaces/report';
 import { User } from '../../../interfaces/user';
 import { Media } from '../../../interfaces/media';
@@ -38,6 +37,9 @@ export class BigPostComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.report) {
+      console.log('Severity:', this.report.severity);
+      console.log('Region:', this.report.region);
+
       this.commentService.getCommentsFromReport(this.report.id).pipe(
         catchError(err => {
           console.error('Greška pri učitavanju komentara:', err);
@@ -143,34 +145,33 @@ export class BigPostComponent implements OnInit, OnDestroy {
     });
   }
 
- onSubmitComment(): void {
-    if (this.newCommentText.trim() && this.currentUser && this.currentUser.username && this.report.id) {
-      const commentContent = { content: this.newCommentText.trim() };
-      
-      this.commentService.createComment(this.currentUser.username, this.report.id, commentContent).subscribe({
-        next: (response: any) => {
-          console.log('Komentar je uspešno poslat.', response);
-
-          // Učitavanje komentara ponovo da se prikaže novi komentar
-          this.commentService.getCommentsFromReport(this.report.id).pipe(
-            catchError(err => {
-              console.error('Greška pri ponovnom učitavanju komentara:', err);
-              return of([]);
-            })
-          ).subscribe(comments => {
-            this.comments$.next(comments);
-          });
-          
-          this.newCommentText = '';
-        },
-        error: (err) => {
-          console.error('Greška pri slanju komentara:', err);
-        }
-      });
-    } else {
-      console.error('Komentar ne može biti prazan, korisnik ili izveštaj nisu dostupni.');
-    }
-  }
+  onSubmitComment(): void {
+    if (this.newCommentText.trim() && this.currentUser && this.currentUser.username && this.report.id) {
+      const commentContent = { content: this.newCommentText.trim() };
+      
+      this.commentService.createComment(this.currentUser.username, this.report.id, commentContent).subscribe({
+        next: (response: any) => {
+          console.log('Komentar je uspešno poslat.', response);
+          
+          this.commentService.getCommentsFromReport(this.report.id).pipe(
+            catchError(err => {
+              console.error('Greška pri ponovnom učitavanju komentara:', err);
+              return of([]);
+            })
+          ).subscribe(comments => {
+            this.comments$.next(comments);
+          });
+          
+          this.newCommentText = '';
+        },
+        error: (err) => {
+          console.error('Greška pri slanju komentara:', err);
+        }
+      });
+    } else {
+      console.error('Komentar ne može biti prazan, korisnik ili izveštaj nisu dostupni.');
+    }
+  }
 
   onDeleteClick(){
     this.reportService.deleteReport(this.report.id).subscribe({
