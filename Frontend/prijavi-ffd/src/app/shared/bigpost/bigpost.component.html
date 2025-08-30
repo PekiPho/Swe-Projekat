@@ -60,8 +60,10 @@
       <h3>Comments ({{ (comments$ | async)?.length || 0 }})</h3>
       <div class="comment-list">
         <div *ngFor="let comment of (comments$ | async)" class="comment-item">
-          <p class="comment-user"><strong>{{ comment.user?.username }}</strong></p>
-          <p class="comment-text">{{ comment.content }}</p>
+          <div class="comment-header">
+            <p class="comment-user"><strong>{{ comment.username }}</strong></p>
+            <p class="comment-text">{{ comment.content }}</p>
+          </div>
         </div>
       </div>
 

@@ -1,11 +1,10 @@
-import { User } from "./user";
-import { Report } from "./report"
+
 
 export interface Comment {
-  id: string;
-  report?: Report | null;
-  user?: User | null;
-  isDeleted: boolean;
-  dateOfComment: string;
-  content: string; 
+  id: string;
+  reportId?: string; 
+  content: string;
+  username?: string; 
+  isDeleted: boolean;
+  dateOfComment: string;
 }

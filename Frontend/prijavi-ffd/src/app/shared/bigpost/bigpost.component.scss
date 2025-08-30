@@ -12,9 +12,9 @@
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Promijenjeno na flex-start */
   z-index: 1000;
-  overflow-y: auto;
+  overflow-y: auto; /* Omogućava scroll cijelog overlay-a ako je potrebno */
   padding: 2rem 0;
 }
 
@@ -26,6 +26,7 @@
   max-width: 800px;
   position: relative;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  margin: 2rem 0; /* Dodaje razmak od vrha/dna */
 }
 
 .close-btn {
@@ -57,101 +58,101 @@
   align-items: flex-start;
   margin-bottom: 1.5rem;
   width: 100%;
-
-  .user-info {
-    flex: 1 1 auto;
-
-    .user-name {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin: 0;
-      color: #333;
-    }
-
-    .report-title {
-      font-size: 1rem;
-      color: #666;
-      margin: 0;
-    }
-  }
-
-  .details-and-buttons {
-    display: flex;
-    gap: 0.5rem;
-    flex-shrink: 0;
-
-    .report-details {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-shrink: 1;
-      max-width: 200px;
-
-      .report-severity {
-        padding: 0.5rem 1rem;
-        border-radius: 1rem;
-        font-weight: 600;
-        color: #fff;
-      }
-
-      .report-severity.severity-low { background-color: #4CAF50; }
-      .report-severity.severity-medium { background-color: #FFC107; }
-      .report-severity.severity-high { background-color: #F44336; }
-
-      .report-place { color: #666; }
-
-      .report-status-resolved {
-        background-color: #4CAF50;
-        color: #fff;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.5rem;
-      }
-    }
-
-    .button-group {
-      display: flex;
-      gap: 0.5rem;
-      flex-shrink: 0;
-
-      .follow-btn {
-        background-color: #6B46C1;
-        color: #fff;
-        border: none;
-        border-radius: 9999px;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s ease-in-out;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        flex-shrink: 0;
-      }
-
-      .follow-btn:hover { background-color: #553C9A; }
-
-      .follow-btn.following { background-color: #4CAF50; }
-      .follow-btn.following:hover { background-color: #43A047; }
-
-      .resolved-btn {
-        background-color: #4CAF50;
-        color: #fff;
-        border: none;
-        border-radius: 9999px;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s ease-in-out;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        flex-shrink: 0;
-      }
-
-      .resolved-btn:hover { background-color: #43A047; }
-    }
-  }
 }
+
+.user-info {
+  flex: 1 1 auto;
+}
+
+.user-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.report-title {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.details-and-buttons {
+  display: flex;
+  flex-direction: column; /* Promijenjeno u kolonu za bolji raspored na manjim ekranima */
+  gap: 1rem; /* Povećan razmak */
+  flex-shrink: 0;
+}
+
+.report-details {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap; /* Dodaje prelom linije ako je potrebno */
+}
+
+.report-severity {
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.report-severity.severity-low { background-color: #4CAF50; }
+.report-severity.severity-medium { background-color: #FFC107; }
+.report-severity.severity-high { background-color: #F44336; }
+
+.report-place { color: #666; }
+
+.report-status-resolved {
+  background-color: #4CAF50;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.follow-btn {
+  background-color: #6B46C1;
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.follow-btn:hover { background-color: #553C9A; }
+
+.follow-btn.following { background-color: #4CAF50; }
+.follow-btn.following:hover { background-color: #43A047; }
+
+.resolved-btn {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.resolved-btn:hover { background-color: #43A047; }
 
 .report-images {
   display: flex;
@@ -183,6 +184,8 @@
 .comment-section {
   border-top: 1px solid #e0e0e0;
   padding-top: 2rem;
+  display: flex;
+  flex-direction: column; /* Dodato */
 }
 
 .comment-section h3 {
@@ -198,6 +201,8 @@
   flex-direction: column;
   gap: 1.5rem;
   margin-bottom: 2rem;
+  max-height: 300px; /* Postavlja fiksnu visinu */
+  overflow-y: auto; /* Omogućava vertikalni scroll */
 }
 
 .comment-item {

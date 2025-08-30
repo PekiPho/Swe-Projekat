@@ -5,8 +5,8 @@
       <label for="sort-select">Sortiraj prema:</label>
       <select id="sort-select" [(ngModel)]="selectedSortOption" (change)="onSortChange()">
         <option value="newest">Najnovije</option>
-        <option value="reseno">Reseno</option>
-        <option value="nereseno">Nereseno</option>
+        <option value="resolved">Rešeno</option>
+        <option value="unresolved">Nerešeno</option>
         <option value="critical">Kritično</option>
         <option value="low">Niska ozbiljnost</option>
       </select>

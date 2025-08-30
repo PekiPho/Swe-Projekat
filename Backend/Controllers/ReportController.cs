@@ -4,6 +4,7 @@ using System.Text.Json;
 using Backend.Dtos;
 using Newtonsoft.Json;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers;
 
@@ -12,7 +13,6 @@ namespace Backend.Controllers;
 public class ReportController : ControllerBase
 {
     private readonly ApplContext Context;
-
     private readonly IMapper Mapper;
 
     public ReportController(ApplContext context, IMapper mapper)
@@ -111,19 +111,19 @@ public class ReportController : ControllerBase
     public async Task<ActionResult> GetReportsByUser(string username, int page = 1)
     {
         var reports = await Context.Reports.Include(c => c.User)
-                                    .Include(c => c.Media)
-                                    .Include(c => c.Comments)
-                                    .Include(c => c.Followers)
-                                    .Include(c => c.Region)
-                                    .Include(c => c.Tags)
-                                    .Include(c => c.Pin)
-                                    .Include(c => c.ResolutionStatus)
-                                    .Include(c => c.Severity)
-                                    .Where(c => c.User.Username == username)
-                                    .OrderByDescending(c => c.DateOfPost)
-                                    .Skip((page - 1) * 50)
-                                    .Take(50)
-                                    .ToListAsync();
+                                         .Include(c => c.Media)
+                                         .Include(c => c.Comments)
+                                         .Include(c => c.Followers)
+                                         .Include(c => c.Region)
+                                         .Include(c => c.Tags)
+                                         .Include(c => c.Pin)
+                                         .Include(c => c.ResolutionStatus)
+                                         .Include(c => c.Severity)
+                                         .Where(c => c.User.Username == username)
+                                         .OrderByDescending(c => c.DateOfPost)
+                                         .Skip((page - 1) * 50)
+                                         .Take(50)
+                                         .ToListAsync();
 
 
         //var postsDto;
@@ -136,16 +136,16 @@ public class ReportController : ControllerBase
     public async Task<ActionResult> GetReportById(Guid reportId)
     {
         var report = await Context.Reports.Include(c => c.User)
-                                    .Include(c => c.Media)
-                                    .Include(c => c.Comments)
-                                    .Include(c => c.Followers)
-                                    .Include(c => c.Region)
-                                    .Include(c => c.Tags)
-                                    .Include(c=>c.Pin)
-                                    .Include(c => c.ResolutionStatus)
-                                    .Include(c => c.Severity)
-                                    .Where(c => c.Id == reportId)
-                                    .FirstOrDefaultAsync();
+                                         .Include(c => c.Media)
+                                         .Include(c => c.Comments)
+                                         .Include(c => c.Followers)
+                                         .Include(c => c.Region)
+                                         .Include(c => c.Tags)
+                                         .Include(c=>c.Pin)
+                                         .Include(c => c.ResolutionStatus)
+                                         .Include(c => c.Severity)
+                                         .Where(c => c.Id == reportId)
+                                         .FirstOrDefaultAsync();
 
         if (report == null)
             return NotFound("Post Not Found");
@@ -158,19 +158,19 @@ public class ReportController : ControllerBase
     public async Task<ActionResult> GetReportsThatUserIsFollowing(string username, int page = 1)
     {
         var reports = await Context.Reports.Include(c => c.User)
-                                    .Include(c => c.Media)
-                                    .Include(c => c.Comments)
-                                    .Include(c => c.Followers)
-                                    .Include(c => c.Region)
-                                    .Include(c => c.Tags)
-                                    .Include(c=>c.Pin)
-                                    .Include(c => c.ResolutionStatus)
-                                    .Include(c => c.Severity)
-                                    .Where(c => c.Followers.Any(a => a.Username == username))
-                                    .OrderByDescending(c => c.DateOfPost)
-                                    .Skip((page - 1) * 50)
-                                    .Take(50)
-                                    .ToListAsync();
+                                         .Include(c => c.Media)
+                                         .Include(c => c.Comments)
+                                         .Include(c => c.Followers)
+                                         .Include(c => c.Region)
+                                         .Include(c => c.Tags)
+                                         .Include(c=>c.Pin)
+                                         .Include(c => c.ResolutionStatus)
+                                         .Include(c => c.Severity)
+                                         .Where(c => c.Followers.Any(a => a.Username == username))
+                                         .OrderByDescending(c => c.DateOfPost)
+                                         .Skip((page - 1) * 50)
+                                         .Take(50)
+                                         .ToListAsync();
 
         var reportsDto = Mapper.Map<List<ReportDto>>(reports);
         return Ok(reportsDto);
@@ -186,15 +186,15 @@ public class ReportController : ControllerBase
         )
     {
         var query = Context.Reports.Include(c => c.User)
-                                .Include(c => c.Media)
-                                .Include(c => c.Comments)
-                                .Include(c => c.Followers)
-                                .Include(c => c.Region)
-                                .Include(c => c.Tags)
-                                .Include(c=>c.Pin)
-                                .Include(c => c.ResolutionStatus)
-                                .Include(c => c.Severity)
-                                .AsQueryable();
+                                 .Include(c => c.Media)
+                                 .Include(c => c.Comments)
+                                 .Include(c => c.Followers)
+                                 .Include(c => c.Region)
+                                 .Include(c => c.Tags)
+                                 .Include(c=>c.Pin)
+                                 .Include(c => c.ResolutionStatus)
+                                 .Include(c => c.Severity)
+                                 .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(severityLevel))
             query = query.Where(c => c.Severity != null && c.Severity.Level == severityLevel);
@@ -212,9 +212,9 @@ public class ReportController : ControllerBase
         }
 
         var reports = await query.OrderByDescending(c => c.DateOfPost)
-                                .Skip((page - 1) * 50)
-                                .Take(50)
-                                .ToListAsync();
+                                 .Skip((page - 1) * 50)
+                                 .Take(50)
+                                 .ToListAsync();
 
 
         var reportsDto = Mapper.Map<List<ReportDto>>(reports);
@@ -313,21 +313,23 @@ public class ReportController : ControllerBase
         if (user == null)
             return NotFound("User Not Found");
 
-        var report = await Context.Reports.Include(c => c.Followers).FirstOrDefaultAsync(c => c.Id == reportId);
+        var report = await Context.Reports.FirstOrDefaultAsync(c => c.Id == reportId);
 
         if (report == null)
             return NotFound("Report Not Found");
 
-        if (!report.Followers.Contains(user))
+        if (!user.Following.Any(r => r.Id == report.Id))
         {
-            report.Followers.Add(user);
+            user.Following.Add(report);
+            
             await Context.SaveChangesAsync();
+            return Ok("User Now Follows Report");
         }
 
-        return Ok("User Now Follows Report");
+        return BadRequest("User already follows this report");
     }
 
-    [HttpPut("UnfollowReport/{username}/{reportId}")]
+    [HttpDelete("UnfollowReport/{username}/{reportId}")]
     public async Task<ActionResult> UnfollowReport(string username, Guid reportId)
     {
         var user = await Context.Users.Include(c => c.Following).FirstOrDefaultAsync(c => c.Username == username);
@@ -335,18 +337,16 @@ public class ReportController : ControllerBase
         if (user == null)
             return NotFound("User Not Found");
 
-        var report = await Context.Reports.Include(c => c.Followers).FirstOrDefaultAsync(c => c.Id == reportId);
+        var reportToRemove = user.Following.FirstOrDefault(r => r.Id == reportId);
 
-        if (report == null)
-            return NotFound("Report Not Found");
-
-        if (report.Followers.Contains(user))
+        if (reportToRemove != null)
         {
-            report.Followers.Remove(user);
+            user.Following.Remove(reportToRemove);
             await Context.SaveChangesAsync();
+            return Ok("User Unfollowed The Report");
         }
 
-        return Ok("Uset Unfollowed The Report");
+        return BadRequest("User is not following this report");
     }
 
     //Delete
@@ -355,15 +355,15 @@ public class ReportController : ControllerBase
     public async Task<ActionResult> DeleteReport(Guid reportId)
     {
         var report = await Context.Reports.Include(c => c.User)
-                                            .Include(c => c.Media)
-                                            .Include(c => c.Comments)
-                                            .Include(c => c.Followers)
-                                            .Include(c => c.Region)
-                                            .Include(c => c.Tags)
-                                            .Include(c=>c.Pin)
-                                            .Include(c => c.ResolutionStatus)
-                                            .Include(c => c.Severity)
-                                            .FirstOrDefaultAsync(c => c.Id == reportId);
+                                         .Include(c => c.Media)
+                                         .Include(c => c.Comments)
+                                         .Include(c => c.Followers)
+                                         .Include(c => c.Region)
+                                         .Include(c => c.Tags)
+                                         .Include(c=>c.Pin)
+                                         .Include(c => c.ResolutionStatus)
+                                         .Include(c => c.Severity)
+                                         .FirstOrDefaultAsync(c => c.Id == reportId);
 
         if (report == null)
             return NotFound("Report Not Found");
