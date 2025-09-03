@@ -17,12 +17,11 @@ export class SmallPostComponent implements OnInit, OnDestroy {
   @Input() report!: Report;
 
   @Output() reportClicked = new EventEmitter<Report>();
-  @Output() followToggled = new EventEmitter<Report>();
-
+  
   private currentUserUsername: string | null = null;
   private userSubscription: Subscription | undefined;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private reportService: ReportService) {}
 
   ngOnInit(): void {
     this.userSubscription = this.userService.userr$.subscribe(user => {
@@ -49,16 +48,33 @@ export class SmallPostComponent implements OnInit, OnDestroy {
     }
 
     const isFollowing = this.isUserFollowing();
-    if (isFollowing) {
-      this.report.followerUsernames = this.report.followerUsernames!.filter(username => username !== this.currentUserUsername);
-    } else {
-      if (!this.report.followerUsernames) {
-        this.report.followerUsernames = [];
-      }
-      this.report.followerUsernames.push(this.currentUserUsername);
-    }
     
-    this.followToggled.emit(this.report);
+    if (isFollowing) {
+      this.reportService.unfollowReport(this.currentUserUsername, this.report.id).subscribe({
+        next: () => {
+          console.log('Uspešno otpraćenje na back-endu.');
+     
+          this.report.followerUsernames = this.report.followerUsernames!.filter(username => username !== this.currentUserUsername);
+        },
+        error: (err) => {
+          console.error('Greška pri otpraćivanju izveštaja:', err);
+        }
+      });
+    } else {
+      this.reportService.followReport(this.currentUserUsername, this.report.id).subscribe({
+        next: () => {
+          console.log('Uspešno praćenje na back-endu.');
+          if (!this.report.followerUsernames) {
+            this.report.followerUsernames = [];
+          }
+          
+          this.report.followerUsernames.push(this.currentUserUsername!);
+        },
+        error: (err) => {
+          console.error('Greška pri praćenju izveštaja:', err);
+        }
+      });
+    }
   }
   
   isUserFollowing(): boolean {

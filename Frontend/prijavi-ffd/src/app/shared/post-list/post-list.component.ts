@@ -1,4 +1,4 @@
-// src/app/pages/shared/post-list/post-list.component.ts
+
 
 import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { ReportService } from '../../../services/report.service';
@@ -151,38 +151,5 @@ export class PostListComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
     this.getReports();
-  }
-
-  onFollowToggled(report: Report): void {
-    if (!this.currentUserUsername) {
-      console.error('Korisnik nije prijavljen.');
-      return;
-    }
-
-    const isFollowing = report.followerUsernames?.includes(this.currentUserUsername);
-
-    if (isFollowing) {
-      this.reportService.unfollowReport(this.currentUserUsername, report.id).subscribe({
-        next: () => {
-          console.log('Uspešno otpraćenje na back-endu.');
-          this.getReports();
-        },
-        error: (err) => {
-          console.error('Greška pri otpraćivanju izveštaja:', err);
-          report.followerUsernames!.push(this.currentUserUsername!);
-        }
-      });
-    } else {
-      this.reportService.followReport(this.currentUserUsername, report.id).subscribe({
-        next: () => {
-          console.log('Uspešno praćenje na back-endu.');
-          this.getReports();
-        },
-        error: (err) => {
-          console.error('Greška pri praćenju izveštaja:', err);
-          report.followerUsernames = report.followerUsernames!.filter(username => username !== this.currentUserUsername);
-        }
-      });
-    }
   }
 }
