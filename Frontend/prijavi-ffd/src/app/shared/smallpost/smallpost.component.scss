@@ -28,7 +28,7 @@
 }
 
 .user-info {
-  border-left: 4px solid #6D28D9; 
+  border-left: 4px solid #007bff; 
   padding-left: 0.75rem;
 
   .user-name {
@@ -38,8 +38,8 @@
     color: #1F2937; 
     letter-spacing: -0.5px;
 
-   
-    background: linear-gradient(to right, #6D28D9, #8B5CF6);
+    
+    background: linear-gradient(to right, #007bff, #052cd6f1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -123,7 +123,7 @@
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  background-color: #6D28D9;
+  background-color: #007bff; 
   color: #fff;
   border: none;
   border-radius: 9999px;
@@ -135,14 +135,14 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background-color: #5B21B6;
+    background-color: #0056b3;
     transform: scale(1.05);
   }
 
   &.following {
-    background-color: #22c55e;
+    background-color: #212529; 
     &:hover {
-      background-color: #15803d;
+      background-color: #343a40;
     }
   }
 }

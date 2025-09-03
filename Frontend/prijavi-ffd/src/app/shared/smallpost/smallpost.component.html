@@ -20,7 +20,7 @@
 
   <button class="follow-btn" [class.following]="isUserFollowing()" (click)="onFollowClick($event)">
     <span *ngIf="!isUserFollowing()">Follow</span>
-    <span *ngIf="isUserFollowing()">Following</span>
+    <span *ngIf="isUserFollowing()">Unfollow</span>
   </button>
 
 

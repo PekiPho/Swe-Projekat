@@ -45,7 +45,8 @@
       <app-small-post
         *ngFor="let report of reports"
         [report]="report"
-        (reportClicked)="onReportClicked(report)">
+        (reportClicked)="onReportClicked(report)"
+        (followToggled)="onFollowToggled($event)">
       </app-small-post>
     </div>
 

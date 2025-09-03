@@ -96,7 +96,7 @@
   border-radius: 1rem;
   font-weight: 600;
   color: #fff;
-  white-space: nowrap; /* Dodato da se tekst ne lomi u dva reda */
+  white-space: nowrap; 
 }
 
 .report-severity.severity-low { background-color: #4CAF50; }
@@ -104,9 +104,9 @@
 .report-severity.severity-high { background-color: #F44336; }
 
 .report-place { 
-  color: #333; /* Promenjena boja da bude jasnija */
+  color: #333; 
   font-weight: 600;
-  white-space: nowrap; /* Dodato */
+  white-space: nowrap;
 }
 
 .report-status-resolved {
@@ -116,7 +116,7 @@
   font-weight: 600;
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
-  white-space: nowrap; /* Dodato */
+  white-space: nowrap;
 }
 
 .button-group {
@@ -126,7 +126,7 @@
 }
 
 .follow-btn {
-  background-color: #6B46C1;
+  background-color: #007bff; 
   color: #fff;
   border: none;
   border-radius: 9999px;
@@ -139,13 +139,13 @@
   flex-shrink: 0;
 }
 
-.follow-btn:hover { background-color: #553C9A; }
+.follow-btn:hover { background-color: #0056b3; } 
 
-.follow-btn.following { background-color: #4CAF50; }
-.follow-btn.following:hover { background-color: #43A047; }
+.follow-btn.following { background-color: #212529; } 
+.follow-btn.following:hover { background-color: #343a40; } 
 
 .resolved-btn {
-  background-color: #4CAF50;
+  background-color: #007bff; 
   color: #fff;
   border: none;
   border-radius: 9999px;
@@ -158,7 +158,7 @@
   flex-shrink: 0;
 }
 
-.resolved-btn:hover { background-color: #43A047; }
+.resolved-btn:hover { background-color: #0056b3; } 
 
 .report-images {
   display: flex;
@@ -247,11 +247,11 @@
 
 .comment-input:focus {
   outline: none;
-  border-color: #6B46C1;
+  border-color: #0250f8;
 }
 
 .comment-submit-btn {
-  background-color: #6B46C1;
+  background-color: #0250f8;
   color: #fff;
   border: none;
   border-radius: 0.75rem;
@@ -262,7 +262,7 @@
   transition: background-color 0.2s ease-in-out;
 }
 
-.comment-submit-btn:hover { background-color: #553C9A; }
+.comment-submit-btn:hover { background-color: #0033a1; }
 
 .delete-actions {
   display: flex;
@@ -273,7 +273,7 @@
 }
 
 .comment-delete-btn {
-  background-color: #941414;
+  background-color: #212529; 
   color: #fff;
   border: none;
   border-radius: 9999px;
@@ -285,4 +285,4 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.comment-delete-btn:hover { background-color: #941414; }
+.comment-delete-btn:hover { background-color: #343a40; } 

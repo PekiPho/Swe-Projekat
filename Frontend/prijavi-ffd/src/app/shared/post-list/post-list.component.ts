@@ -1,11 +1,12 @@
 // src/app/pages/shared/post-list/post-list.component.ts
 
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { ReportService } from '../../../services/report.service';
 import { FilterService } from '../../../services/filter.service';
+import { UserService } from '../../../services/user.service';
 import { Report } from '../../../interfaces/report';
-import { Observable, of, forkJoin } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of, forkJoin, Subscription } from 'rxjs';
+import { catchError, map, take } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { SmallPostComponent } from '../../shared/smallpost/smallpost.component';
 import { BigPostComponent } from '../../shared/bigpost/bigpost.component';
@@ -19,11 +20,9 @@ import { Region, Severity, Tag } from '../../../interfaces/media';
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.scss']
 })
-export class PostListComponent implements OnInit, OnChanges {
+export class PostListComponent implements OnInit, OnChanges, OnDestroy {
   
-  // Ovo svojstvo će primiti rezultate od roditeljske komponente (npr. SearchPageComponent)
   @Input() reportsFromParent: Report[] | null = null;
-  
   reports$: Observable<Report[] | null> = of(null);
   selectedReport: Report | null = null;
   selectedSortOption: string = 'newest';
@@ -35,21 +34,33 @@ export class PostListComponent implements OnInit, OnChanges {
   selectedTags: string[] = [];
   selectedSeverity: string | null = null;
   selectedRegion: string | null = null;
+
+  private currentUserUsername: string | null = null;
+  private userSubscription: Subscription | undefined;
   
   constructor(
     private reportService: ReportService,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
-    // Provera da li je komponenta na main-page
+    this.userSubscription = this.userService.userr$.subscribe(user => {
+      this.currentUserUsername = user?.username || null;
+    });
+
     if (!this.reportsFromParent) {
       this.loadFilters();
       this.getReports();
     }
   }
 
-  // Ova metoda se poziva kada se promeni @Input() svojstvo (npr. na search-page)
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reportsFromParent'] && changes['reportsFromParent'].currentValue !== undefined) {
       this.reports$ = of(this.reportsFromParent);
@@ -91,7 +102,6 @@ export class PostListComponent implements OnInit, OnChanges {
         severityLevel = 'Low';
         break;
       default:
-        // 'newest' ili drugi, bez posebnog statusa/severity
         break;
     }
 
@@ -115,6 +125,7 @@ export class PostListComponent implements OnInit, OnChanges {
 
   onCloseBigPost(): void {
     this.selectedReport = null;
+    this.getReports();
   }
 
   onSortChange(): void {
@@ -140,5 +151,38 @@ export class PostListComponent implements OnInit, OnChanges {
       }
     }
     this.getReports();
+  }
+
+  onFollowToggled(report: Report): void {
+    if (!this.currentUserUsername) {
+      console.error('Korisnik nije prijavljen.');
+      return;
+    }
+
+    const isFollowing = report.followerUsernames?.includes(this.currentUserUsername);
+
+    if (isFollowing) {
+      this.reportService.unfollowReport(this.currentUserUsername, report.id).subscribe({
+        next: () => {
+          console.log('Uspešno otpraćenje na back-endu.');
+          this.getReports();
+        },
+        error: (err) => {
+          console.error('Greška pri otpraćivanju izveštaja:', err);
+          report.followerUsernames!.push(this.currentUserUsername!);
+        }
+      });
+    } else {
+      this.reportService.followReport(this.currentUserUsername, report.id).subscribe({
+        next: () => {
+          console.log('Uspešno praćenje na back-endu.');
+          this.getReports();
+        },
+        error: (err) => {
+          console.error('Greška pri praćenju izveštaja:', err);
+          report.followerUsernames = report.followerUsernames!.filter(username => username !== this.currentUserUsername);
+        }
+      });
+    }
   }
 }

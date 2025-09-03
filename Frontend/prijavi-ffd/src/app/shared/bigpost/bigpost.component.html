@@ -28,7 +28,7 @@
         <div class="button-group">
           <button class="follow-btn" [class.following]="isUserFollowing()" (click)="onFollowClick()">
             <span *ngIf="!isUserFollowing()">Follow</span>
-            <span *ngIf="isUserFollowing()">Following</span>
+            <span *ngIf="isUserFollowing()">Unfollow</span>
           </button>
 
           <button *ngIf="report.resolutionStatus !== 'Resolved'" class="resolved-btn" (click)="onResolvedClick()">
