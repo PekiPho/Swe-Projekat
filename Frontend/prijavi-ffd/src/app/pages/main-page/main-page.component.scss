@@ -140,3 +140,64 @@ button.save:hover {
   border-radius: 6px;
   font-size: 0.9rem;
 }
+
+@media (max-width: 390px) and (max-height: 844px) {
+  .report-container {
+    padding-top: 100px;
+  }
+
+  .card {
+    width: 90% !important;
+    font-size: 0.9rem;
+    padding: 15px;
+  }
+
+  .custom-modal .modal-dialog {
+    max-width: 95% !important;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .modal-header h5 {
+    font-size: 1rem;
+  }
+
+  .modal-body label,
+  .modal-body h2,
+  .modal-body h5 {
+    font-size: 0.9rem;
+  }
+
+  .modal-body input,
+  .modal-body textarea,
+  .modal-body select {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .modal-footer button {
+    font-size: 0.85rem;
+    padding: 8px 15px;
+  }
+
+  .tag-item {
+    margin-bottom: 8px;
+  }
+
+  .top-actions {
+    top: 90px;
+    right: 10px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .top-actions input {
+    width: 120px !important;
+    font-size: 0.85rem;
+  }
+
+  .top-actions .btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}

@@ -140,3 +140,31 @@
   font-size: 1.2rem;
   color: #6b7280;
 }
+
+@media (max-width: 390px) and (max-height: 844px) {
+  .filters-section,
+  .header-section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .reports-grid {
+    margin-top: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .tag-list label {
+    flex: 0 0 48%;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+}
