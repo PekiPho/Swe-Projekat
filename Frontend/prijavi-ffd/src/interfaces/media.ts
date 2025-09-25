@@ -17,7 +17,9 @@ export interface Tag {
   id: number;
   name: string;
   reports?: Report[];
+  selected?: boolean; 
 }
+
 export interface ResolutionStatus {
   id: number;
   status: string;

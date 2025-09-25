@@ -1,12 +1,9 @@
-
-
 import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { ReportService } from '../../../services/report.service';
 import { FilterService } from '../../../services/filter.service';
 import { UserService } from '../../../services/user.service';
 import { Report } from '../../../interfaces/report';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
-import { catchError, map, take } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { SmallPostComponent } from '../../shared/smallpost/smallpost.component';
 import { BigPostComponent } from '../../shared/bigpost/bigpost.component';
@@ -21,23 +18,23 @@ import { Region, Severity, Tag } from '../../../interfaces/media';
   styleUrls: ['./post-list.component.scss']
 })
 export class PostListComponent implements OnInit, OnChanges, OnDestroy {
-  
+
   @Input() reportsFromParent: Report[] | null = null;
   reports$: Observable<Report[] | null> = of(null);
   selectedReport: Report | null = null;
   selectedSortOption: string = 'newest';
-  
+
   tags: Tag[] = [];
   regions: Region[] = [];
   severities: Severity[] = [];
-  
+
   selectedTags: string[] = [];
   selectedSeverity: string | null = null;
   selectedRegion: string | null = null;
 
   private currentUserUsername: string | null = null;
   private userSubscription: Subscription | undefined;
-  
+
   constructor(
     private reportService: ReportService,
     private filterService: FilterService,
@@ -72,15 +69,18 @@ export class PostListComponent implements OnInit, OnChanges, OnDestroy {
       tags: this.filterService.loadTags(),
       regions: this.filterService.loadRegion(),
       severities: this.filterService.loadSeverity()
-    }).pipe(
-      catchError(err => {
+    }).subscribe({
+      next: (results) => {
+        this.tags = results.tags.map(tag => ({ ...tag, selected: false }));
+        this.regions = results.regions;
+        this.severities = results.severities;
+      },
+      error: (err) => {
         console.error('Greška pri učitavanju filtera:', err);
-        return of({ tags: [], regions: [], severities: [] });
-      })
-    ).subscribe(results => {
-      this.tags = results.tags;
-      this.regions = results.regions;
-      this.severities = results.severities;
+        this.tags = [];
+        this.regions = [];
+        this.severities = [];
+      }
     });
   }
 
@@ -105,18 +105,20 @@ export class PostListComponent implements OnInit, OnChanges, OnDestroy {
         break;
     }
 
-    this.reports$ = this.reportService.getReportsFiltered(
-      1, 
-      this.selectedTags.length > 0 ? this.selectedTags : undefined,
+    this.reportService.getReportsFiltered(
+      1,
+      this.selectedTags.length ? this.selectedTags : undefined,
       severityLevel,
-      this.selectedRegion || undefined,
-      resolutionStatus
-    ).pipe(
-      catchError(err => {
-        console.error('Došlo je do greške prilikom dobavljanja izveštaja:', err);
-        return of([]);
-      })
-    );
+      resolutionStatus,
+      this.selectedRegion || undefined
+    ).subscribe({
+      next: (data) => {
+        this.reports$ = of(data);
+      },
+      error: (err) => {
+        console.error('Greška pri učitavanju izveštaja:', err);
+      }
+    });
   }
 
   onReportClicked(report: Report): void {
@@ -129,27 +131,27 @@ export class PostListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onSortChange(): void {
-    this.selectedSeverity = null;
-    this.selectedRegion = null;
-    this.selectedTags = [];
+   
     this.getReports();
   }
 
-  onFilterChange(event: Event, filterType: 'severity' | 'region' | 'tags'): void {
-    this.selectedSortOption = ''; 
-    const value = (event.target as HTMLInputElement).value;
-
+  onFilterChange(eventOrValue: Event | string | null, filterType: 'severity' | 'region' | 'tags'): void {
     if (filterType === 'severity') {
-      this.selectedSeverity = value;
+      this.selectedSeverity = eventOrValue as string | null;
     } else if (filterType === 'region') {
-      this.selectedRegion = value;
+      this.selectedRegion = eventOrValue as string | null;
     } else if (filterType === 'tags') {
-      if ((event.target as HTMLInputElement).checked) {
+      const event = eventOrValue as Event;
+      const target = event.target as HTMLInputElement;
+      const value = target.value;
+
+      if (target.checked) {
         this.selectedTags.push(value);
       } else {
         this.selectedTags = this.selectedTags.filter(tag => tag !== value);
       }
     }
+
     this.getReports();
   }
 }

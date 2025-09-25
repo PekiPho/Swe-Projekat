@@ -100,12 +100,12 @@ export class ReportService {
     );
   }
   
-  // Follow
+ 
   followReport(username: string, reportId: string): Observable<any> {
     return this.http.put(`${this.url}/FollowReport/${username}/${reportId}`, {});
   }
 
-  // Unfollow - sada koristi HTTP DELETE
+ 
   unfollowReport(username: string, reportId: string): Observable<any> {
     return this.http.delete(`${this.url}/UnfollowReport/${username}/${reportId}`).pipe(
       catchError(this.handleError)

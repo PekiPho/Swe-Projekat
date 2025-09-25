@@ -11,3 +11,4 @@ out-tsc/
 
 *.user
 *.suo
+wwwroot

@@ -1,45 +1,47 @@
 <div class="post-list-container">
   <div class="header-section">
     <h2>Sve objave</h2>
-    <div class="sort-controls">
-      <label for="sort-select">Sortiraj prema:</label>
-      <select id="sort-select" [(ngModel)]="selectedSortOption" (change)="onSortChange()">
-        <option value="newest">Najnovije</option>
-        <option value="resolved">Rešeno</option>
-        <option value="unresolved">Nerešeno</option>
-        <option value="critical">Kritično</option>
-        <option value="low">Niska ozbiljnost</option>
-      </select>
-    </div>
   </div>
 
   <div class="filters-section">
     <div class="filter-group">
       <label>Filteri:</label>
-      <select [(ngModel)]="selectedSeverity" (change)="onFilterChange($event, 'severity')">
+
+      <!-- Ozbiljnost -->
+      <select [(ngModel)]="selectedSeverity" (ngModelChange)="onFilterChange($event, 'severity')">
         <option [ngValue]="null">Sve ozbiljnosti</option>
-        <option *ngFor="let severity of severities" [ngValue]="severity.level">{{ severity.level }}</option>
+        <option *ngFor="let severity of severities" [ngValue]="severity.level">
+          {{ severity.level }}
+        </option>
       </select>
-      <select [(ngModel)]="selectedRegion" (change)="onFilterChange($event, 'region')">
+
+      <!-- Regija -->
+      <select [(ngModel)]="selectedRegion" (ngModelChange)="onFilterChange($event, 'region')">
         <option [ngValue]="null">Sve regije</option>
-        <option *ngFor="let region of regions" [ngValue]="region.name">{{ region.name }}</option>
+        <option *ngFor="let region of regions" [ngValue]="region.name">
+          {{ region.name }}
+        </option>
       </select>
     </div>
+
+    <!-- Tagovi -->
     <div class="filter-group tag-filters">
       <label>Oznake:</label>
       <div class="tag-list">
         <label *ngFor="let tag of tags">
           <input 
-            type="checkbox" 
-            [value]="tag.name" 
+            type="checkbox"
+            [(ngModel)]="tag.selected"
             (change)="onFilterChange($event, 'tags')"
-            [checked]="selectedTags.includes(tag.name)"
-          > {{ tag.name }}
+            [value]="tag.name"
+          >
+          {{ tag.name }}
         </label>
       </div>
     </div>
   </div>
 
+  <!-- Lista objava -->
   <ng-container *ngIf="reports$ | async as reports; else loading">
     <div *ngIf="reports.length > 0; else noReports" class="reports-grid">
       <app-small-post
@@ -63,6 +65,7 @@
   </ng-template>
 </div>
 
+<!-- Big Post -->
 <app-big-post
   *ngIf="selectedReport"
   [report]="selectedReport"
