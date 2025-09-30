@@ -7,15 +7,15 @@ import { Report } from '../interfaces/report';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
-  private baseUrl = 'https://localhost:7080/Search'; 
+  private baseUrl = 'https://localhost:7080/Search'; 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-  onTypeReports(query: string): Observable<Report[]> {
-    return this.http.get<Report[]>(`${this.baseUrl}/OnTypeReports/${query}`);
-  }
+  onTypeReports(query: string): Observable<Report[]> {
+    return this.http.get<Report[]>(`${this.baseUrl}/OnTypeReports/${query}`);
+  }
 
-  searchReports(query: string, page: number = 1): Observable<Report[]> {
-    return this.http.get<Report[]>(`${this.baseUrl}/SearchReports/${query}/${page}`);
-  }
+  searchReports(query: string, page: number = 1): Observable<Report[]> {
+    return this.http.get<Report[]>(`${this.baseUrl}/SearchReports/${query}/${page}`);
+  }
 }

@@ -23,27 +23,18 @@ import { CommonModule, NgIf } from '@angular/common';
 })
 export class NavbarComponent implements OnInit {
   currentUser: User | null = null;
-  searchQuery = '';
-  suggestions: Report[] = [];
-  private searchSubject = new Subject<string>();
+
+  public query='';
+  public reports:Report[]=[];
+  public showSug:boolean=false;
 
   constructor(
     private router: Router, 
     private searchService: SearchService, 
     private userService: UserService
-  ) {
-    this.searchSubject
-      .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe(query => {
-        if (query.length >= 3) {
-          this.searchService.onTypeReports(query).subscribe(res => {
-            this.suggestions = res;
-          });
-        } else {
-          this.suggestions = [];
-        }
-      });
-  }
+  ) {}
+
+  
 
   ngOnInit() {
     this.userService.userr$.subscribe(user => {
@@ -51,19 +42,48 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  onSearchChange() {
-    this.searchSubject.next(this.searchQuery);
-  }
 
-  selectSuggestion(title: string) {
-    this.searchQuery = title;
-    this.goToSearchPage();
-  }
 
-  goToSearchPage() {
-    if (this.searchQuery.trim()) {
-      this.router.navigate(['/search-page'], { queryParams: { q: this.searchQuery } });
-      this.suggestions = [];
+  onType(event:Event){
+    var input=event.target as HTMLInputElement;
+    this.query=input.value;
+
+    //console.log(this.query);
+    if(input.value.length>3){
+      this.reports=[];
+
+
+      this.searchService.onTypeReports(input.value).subscribe({
+        next:(data)=>{
+          this.reports=data;
+          this.showSug=true;
+          //console.log(this.reports);
+        },
+        error:(err)=>{
+          console.log(err);
+          this.showSug=false;
+        }
+      });
+
+      
     }
+    else{
+      this.showSug=false;
+    }
+
+  }
+
+  selectSuggestion(title:string){
+    this.query=title;
+    this.onSearch();
+  }
+
+  onSearch(){
+    this.reports=[];
+
+    console.log(this.query)
+    if(!this.query?.trim()) return;
+
+    this.router.navigate(['/search-page',this.query]);
   }
 }

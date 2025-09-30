@@ -6,7 +6,7 @@ import { Report } from '../interfaces/report';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
-  private baseUrl = 'https://localhost:5001/Search'; 
+  private baseUrl = 'https://localhost:7080/Search'; 
 
   constructor(private http: HttpClient) {}
 

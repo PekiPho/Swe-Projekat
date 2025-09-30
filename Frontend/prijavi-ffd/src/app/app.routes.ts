@@ -31,7 +31,7 @@ export const routes: Routes = [
         component:MainPageComponent
     },
     {
-        path:'search-page',
+        path:'search-page/:query',
         component:SearchPageComponent
     },
     {

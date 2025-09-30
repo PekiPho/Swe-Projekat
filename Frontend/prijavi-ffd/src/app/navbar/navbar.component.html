@@ -1,49 +1,42 @@
-<div class="first card text-center" style="width: 100vw; font-size: 2em; position: fixed;">
+<div class="first card">
   <div class="card-body">
-    <img src="FFD.png" alt="Background Image" style="position: absolute; top: 0; left: 0; height:5.5vw">
+    <img src="FFD.png" alt="Background" class="logo-img">
 
-    <div class="d-flex justify-content-center gap-3">
-      <a routerLink="/map-page" class="btn btn-outline-primary" style="width: 6rem">
-        <img src="placeholder.png" alt="Map" style="height:4vw">
+    <div class="d-flex justify-content-center align-items-center gap-3 position-relative w-100">
+      <a routerLink="/map-page" class="btn btn-outline-primary">
+        <img src="placeholder.png" alt="Map">
       </a>
 
-      <a routerLink="/main-page" class="btn btn-outline-primary" style="width: 6rem;">
-        <img src="home.png" alt="Home" style="height:4vw">
+      <a routerLink="/main-page" class="btn btn-outline-primary">
+        <img src="home.png" alt="Home">
       </a>
 
-      <div class="search-bar" style="position: relative;">
-        <input 
-          type="search" 
-          class="search-input" 
-          placeholder="Search here..." 
-          tabindex="0"
-          [(ngModel)]="searchQuery"
-          (input)="onSearchChange()"
-          (keyup.enter)="goToSearchPage()"
-        >
-        <button class="search-submit" tabindex="0" (click)="goToSearchPage()">
-          <img src="search.png" alt="S" style="height:4vw">
-        </button>
+      <div class="search-bar-wrapper position-relative">
+        <div class="search-bar">
+          <input class="search-input" placeholder="Search" (input)="onType($event)">
+          <button class="search-submit btn" type="button" (click)="onSearch()">
+            <img src="search.png" alt="S">
+          </button>
+        </div>
 
-        <ul *ngIf="suggestions.length > 0" class="suggestions-list">
-          <li 
-            *ngFor="let s of suggestions" 
-            (click)="selectSuggestion(s.title || '')"
-            style="cursor:pointer"
-          >
-            {{ s.title }}
+        <ul class="suggestions-list" *ngIf="showSug && reports.length > 0">
+          <li *ngFor="let report of reports" (click)="selectSuggestion(report.title!)">
+            {{ report.title }}
           </li>
         </ul>
       </div>
 
-      <a routerLink="/following-page" class="btn btn-outline-primary" style="width: 6rem;">
-        <img src="social-media.png" alt="Following" style="height:4vw">
+      <a routerLink="/following-page" class="btn btn-outline-primary">
+        <img src="social-media.png" alt="Following">
       </a>
 
-      <a routerLink="/profile-page" class="btn btn-outline-primary" style="width: 6rem;">
-        <img src="user.png" alt="Profile" style="height:4vw">
+      <a routerLink="/profile-page" class="btn btn-outline-primary">
+        <img src="user.png" alt="Profile">
       </a>
+
+      <div class=" username" *ngIf="currentUser">{{ currentUser!.username }}</div>
     </div>
-    <div *ngIf="currentUser">{{currentUser!.username}}</div>
+
+   
   </div>
 </div>
