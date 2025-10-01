@@ -26,3 +26,5 @@ export interface ReportToSend{
   severityLevel:string; 
   regionName:string; 
   pin?:Pin; }
+
+  

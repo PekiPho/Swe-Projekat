@@ -24,7 +24,7 @@ public class ReportController : ControllerBase
     //Create
 
     [HttpPost("AddReport/{username}")]
-    public async Task<ActionResult> AddReport(string username, [FromForm] string reportJson, [FromForm] IFormFile? files)
+    public async Task<ActionResult> AddReport(string username, [FromForm] string reportJson, [FromForm] IFormFile? files,[FromForm] double? pinLat,[FromForm] double? pinLon)
     {
         //only single file za sad
         //ce dodam kasnije ako me ne mrzi ali je dosta dodatan complexity
@@ -64,6 +64,22 @@ public class ReportController : ControllerBase
         await Context.Reports.AddAsync(report);
         await Context.SaveChangesAsync();
 
+
+        if (pinLat.HasValue && pinLon.HasValue)
+        {
+            var pin = new Pin
+            {
+                Latitude = pinLat.Value,
+                Longitude = pinLon.Value,
+                Report = report
+            };
+
+            await Context.Pins.AddAsync(pin);
+            await Context.SaveChangesAsync();
+
+            report.Pin = pin;
+        }
+
         if (files != null)
         {
             var extensions = new List<string> { ".jpg", ".png", ".jpeg" };
@@ -84,7 +100,7 @@ public class ReportController : ControllerBase
             };
 
             await Context.Media.AddAsync(media);
-            await Context.SaveChangesAsync();  
+            await Context.SaveChangesAsync();
 
             var fileName = media.MediaId + ext;
             var filePath = Path.Combine(mediaFolder, fileName);

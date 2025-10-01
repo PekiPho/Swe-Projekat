@@ -16,12 +16,18 @@ export class ReportService {
     this.url = 'https://localhost:7080/Report';
   }
 
-  addReport(username: string, report: any, file?: File): Observable<Report> {
+  addReport(username: string, report: any, file?: File, pinLatLng?: { lat: number, lng: number }): Observable<Report> {
     const formData = new FormData();
     formData.append('reportJson', JSON.stringify(report));
     if (file) {
       formData.append('files', file);
     }
+
+    if (pinLatLng) {
+    formData.append('pinLat', pinLatLng.lat.toString());
+    formData.append('pinLon', pinLatLng.lng.toString());
+  }
+  
     return this.http.post<Report>(`${this.url}/AddReport/${username}`, formData).pipe(
       catchError(this.handleError)
     );

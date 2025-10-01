@@ -39,4 +39,5 @@ export interface ReportPinDto {
   severityLevel: string;
   resolutionStatus: string;
   tags: string[];
+  region?: string | null;
 }

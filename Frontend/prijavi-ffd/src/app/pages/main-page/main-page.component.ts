@@ -10,7 +10,8 @@ import { HttpClient } from '@angular/common/http';
 import { FilterService } from '../../../services/filter.service';
 import { FormsModule } from '@angular/forms';
 import { RoleService } from '../../../services/role.service';
-import { PostListComponent } from '../../shared/post-list/post-list.component'; 
+import { PostListComponent } from '../../shared/post-list/post-list.component';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-main-page',
@@ -53,10 +54,20 @@ export class MainPageComponent implements OnInit {
     console.log('Dugme kliknuto!'); 
     this.createReport = true;
     this.loadAllOptions();
+
+    setTimeout(()=>{
+      this.initPinMap();
+    },0);
   }
 
   closeReportModal() {
     this.createReport = false;
+
+    this.selectedLatLng = null;
+
+    if (this.pinMap) {
+      this.pinMap.remove();
+    }
   }
 
   toggleSortMenu() {
@@ -133,7 +144,7 @@ export class MainPageComponent implements OnInit {
     };
 
     console.log("Report data:", reportData);
-    this.reportService.addReport(this.user.username, reportData, this.selectedFile ?? undefined).subscribe({
+    this.reportService.addReport(this.user.username, reportData, this.selectedFile ?? undefined,this.selectedLatLng ?? undefined).subscribe({
       next: (res) => {
         console.log("Report saved in DB:", res);
         this.closeReportModal();
@@ -143,6 +154,7 @@ export class MainPageComponent implements OnInit {
       }
     });
   }
+
   get isAdmin(): boolean{
     return this.user?.roleName?.includes('admin')??false;
   }
@@ -178,11 +190,59 @@ export class MainPageComponent implements OnInit {
   removeRole(){
     this.roleService.removeRoleFromUser(this.user!.username).subscribe({
       next:()=>{
-        console.log("uspesno uklonjena rola");
+        console.log("uspesno uklonjen role");
       },
       error: (err) => {
         console.error('Greška pri uklanjanju role:', err);
       }
     });
   }
+
+  private pinMap!: L.Map;
+  private marker!: L.Marker;
+  public selectedLatLng: { lat: number; lng: number } | null = null;
+
+
+  private initPinMap(){
+    if(!this.createReport) return;
+
+    const defaultCoords = { lat: 44.5, lng: 21.0 };
+
+    this.pinMap=L.map('pinMap',{
+      center:defaultCoords,
+      zoom: 9
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(this.pinMap);
+
+    this.pinMap.on('click', (e: L.LeafletMouseEvent) => {
+      const latLng = e.latlng;
+      this.selectedLatLng = { lat: latLng.lat, lng: latLng.lng };
+
+      if (this.marker) {
+        this.marker.setLatLng(latLng);
+      } else {
+        this.marker = L.marker(latLng, { draggable: true }).addTo(this.pinMap);
+        this.marker.on('dragend', (event) => {
+          const m = (event.target as L.Marker).getLatLng();
+          this.selectedLatLng = { lat: m.lat, lng: m.lng };
+        });
+      }
+    });
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userCoords = { lat: position.coords.latitude, lng: position.coords.longitude };
+          this.pinMap.setView(userCoords, 12);
+        },
+        () => {}
+      );
+    }
+  }
+
+  
 }

@@ -125,4 +125,6 @@ public class ReportPinDto
     public string ResolutionStatus { get; set; }
 
     public List<string> Tags { get; set; }
+
+    public string Region { get; set; }
 }
