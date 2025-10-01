@@ -80,32 +80,37 @@ public class PinsController : ControllerBase
                     c.Pin.Longitude <= east)
         .AsQueryable();
 
-    if (tags != null && tags.Length > 0)
-        query = query.Where(c => c.Tags.Any(t => tags.Contains(t.Name)));
+        if (tags != null && tags.Length > 0)
+            query = query.Where(c => c.Tags.Any(t => tags.Contains(t.Name)));
 
-    if (severities != null && severities.Length > 0)
-        query = query.Where(c => c.Severity != null && severities.Contains(c.Severity.Level));
+        if (severities != null && severities.Length > 0)
+            query = query.Where(c => c.Severity != null && severities.Contains(c.Severity.Level));
 
-    if (regions != null && regions.Length > 0)
-        query = query.Where(c => c.Region != null && regions.Contains(c.Region.Name));
+        if (regions != null && regions.Length > 0)
+            query = query.Where(c => c.Region != null && regions.Contains(c.Region.Name));
 
-    if (resolutionStatuses != null && resolutionStatuses.Length > 0)
-        query = query.Where(c => c.ResolutionStatus != null && resolutionStatuses.Contains(c.ResolutionStatus.Status));
-
-    var pins = await query
-        .Select(c => new ReportPinDto
+        if (resolutionStatuses != null && resolutionStatuses.Length > 0)
         {
-            ReportId = c.Id,
-            Latitude = c.Pin!.Latitude,
-            Longitude = c.Pin!.Longitude,
-            SeverityLevel = c.Severity != null ? c.Severity.Level : "1",
-            ResolutionStatus = c.ResolutionStatus != null ? c.ResolutionStatus.Status : "unsolved",
-            Tags = c.Tags.Select(t => t.Name).ToList(),
-            Region = c.Region != null ? c.Region.Name : "None"
-        })
-        .ToListAsync();
+            query = query.Where(c =>
+                (c.ResolutionStatus == null && resolutionStatuses.Contains("unsolved")) ||
+                (c.ResolutionStatus != null && resolutionStatuses.Contains(c.ResolutionStatus.Status))
+            );
+        }
 
-    return Ok(pins);
+        var pins = await query
+            .Select(c => new ReportPinDto
+            {
+                ReportId = c.Id,
+                Latitude = c.Pin!.Latitude,
+                Longitude = c.Pin!.Longitude,
+                SeverityLevel = c.Severity != null ? c.Severity.Level : "1",
+                ResolutionStatus = c.ResolutionStatus != null ? c.ResolutionStatus.Status : "unsolved",
+                Tags = c.Tags.Select(t => t.Name).ToList(),
+                Region = c.Region != null ? c.Region.Name : "None"
+            })
+            .ToListAsync();
+
+        return Ok(pins);
     }
 
     [HttpGet("GetPinByReport/{reportId}")]

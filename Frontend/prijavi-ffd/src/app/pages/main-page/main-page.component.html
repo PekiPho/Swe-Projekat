@@ -16,60 +16,69 @@
 </div>
 
 <div *ngIf="createReport" class="custom-modal" (click)="closeReportModal()">
-  <div class="modal-dialog" (click)="$event.stopPropagation()">
+  <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Novi Report</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeReportModal()"></button>
+        <button type="button" class="btn-close" aria-label="Exit" (click)="closeReportModal()"></button>
       </div>
       <div class="modal-body">
         <form>
-          <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title">
-          </div>
-          <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description"></textarea>
-          </div>
-          <div>
-            <h2>Tags</h2>
-            <div class="tag-conteiner">
-                <div *ngFor="let tag of tags" class="tag-item">
-                    <label [for]="tag.id" class="tag-label">{{ tag.name }}</label>
-                    <input type="checkbox" [id]="tag.id" [value]="tag.name" class="tag-checkbox">
-                </div>
+          <div class="row">
+            
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title">
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" rows="5"></textarea>
+              </div>
+              <div class="mb-3 mt-3">
+                <label for="fileUpload" class="form-label">Attach File</label>
+                <input 
+                  type="file" 
+                  class="form-control" 
+                  id="fileUpload" 
+                  (change)="onFileSelected($event)">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Select Location</label>
+                <div id="pinMap" style="height: 250px; width: 100%; border: 1px solid #ccc; border-radius: 8px;"></div>
+              </div>
             </div>
-          </div>
-          <div class="mt-3">
-            <h5>Region</h5>
-            <select class="form-select" (change)="onRegionChange($event)">
-                <option value="">-- Select Region --</option>
-                <option *ngFor="let region of regions" [value]="region.id">
+
+            <div class="col-md-6">
+              <div>
+                <h6>Tags</h6>
+                <div class="tag-container d-flex flex-wrap">
+                  <div *ngFor="let tag of tags" class="tag-item me-2 mb-2">
+                    <input type="checkbox" [id]="tag.id" [value]="tag.name" class="btn-check">
+                    <label [for]="tag.id" class="btn btn-outline-primary btn-sm">{{ tag.name }}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <h6>Region</h6>
+                <select class="form-select" (change)="onRegionChange($event)">
+                  <option value="">-- Select Region --</option>
+                  <option *ngFor="let region of regions" [value]="region.id">
                     {{ region.name }}
-                </option>
-            </select>
-          </div>
-          <div class="mt-3">
-                <h5>Severity</h5>
-                <select class="form-select" (change)="onSeverityChange($event)">
-                    <option value="">-- Select Severity --</option>
-                    <option *ngFor="let severity of severities" [value]="severity.id">
-                        {{ severity.level }}
-                    </option>
+                  </option>
                 </select>
-          </div>
-          <div class="mb-3">
-              <label class="form-label">Select Location</label>
-              <div id="pinMap" style="height: 200px; width: 200px; border: 1px solid #ccc;"></div>
-          </div>
-          <div class="mb-3 mt-3">
-              <label for="fileUpload" class="form-label">Attach File</label>
-              <input 
-                type="file" 
-                class="form-control" 
-                id="fileUpload" 
-                (change)="onFileSelected($event)">
+              </div>
+              <div class="mt-3">
+                <h6>Severity</h6>
+                <select class="form-select" (change)="onSeverityChange($event)">
+                  <option value="">-- Select Severity --</option>
+                  <option *ngFor="let severity of severities" [value]="severity.id">
+                    {{ severity.level }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
           </div>
         </form>
       </div>

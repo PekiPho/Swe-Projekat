@@ -8,7 +8,7 @@ import { PinsService } from '../../../services/pins.service';
   selector: 'app-map-page',
   imports: [NavbarComponent],
   templateUrl: './map-page.component.html',
-  styleUrl: './map-page.component.scss'
+  styleUrls: ['./map-page.component.scss']
 })
 export class MapPageComponent implements AfterViewInit{
 
@@ -44,6 +44,8 @@ export class MapPageComponent implements AfterViewInit{
       attribution: '&copy; OpenStreetMap contributors',
       maxZoom:19
     }).addTo(this.map);
+
+    this.pinsLayer.addTo(this.map);
   }
 
 
@@ -56,6 +58,7 @@ export class MapPageComponent implements AfterViewInit{
 
   private loadPins(){
 
+    
     if(!this.map) return;
 
     const bounds = this.map.getBounds();
@@ -106,21 +109,34 @@ export class MapPageComponent implements AfterViewInit{
             radius: 8,
             color:borderColor,
             fillColor:fillColor,
-            fillOpacity: 0.9,
+            fillOpacity: 1,
             weight:2
+          });
+
+          const outerStick=L.polyline([
+            [pin.latitude,pin.longitude],
+            [pin.latitude-0.0002,pin.longitude]
+          ],{
+            color:borderColor,
+            weight:6
           });
 
           const stick= L.polyline([
             [pin.latitude,pin.longitude],
-            [pin.latitude-0.0005,pin.longitude]
+            [pin.latitude-0.0002,pin.longitude]
           ],{
             color:severityColor,
             weight:4
           });
 
+          
+          outerStick.addTo(this.pinsLayer);
           stick.addTo(this.pinsLayer);
           marker.addTo(this.pinsLayer);
+          
         });
+
+        console.log(newPins);
       },
       error:(err)=>{
         console.log(err);
