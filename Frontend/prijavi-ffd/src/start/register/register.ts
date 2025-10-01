@@ -1,12 +1,12 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { User } from '../../interfaces/user';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
-  imports: [NgIf],
+  imports: [NgIf,RouterLink,RouterModule],
   templateUrl: './register.html',
   styleUrl: './register.scss'
 })
