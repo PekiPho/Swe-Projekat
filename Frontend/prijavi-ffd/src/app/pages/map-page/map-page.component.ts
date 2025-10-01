@@ -3,10 +3,14 @@ import { NavbarComponent } from '../../navbar/navbar.component';
 import * as L from 'leaflet';
 import { ReportPinDto } from '../../../interfaces/media';
 import { PinsService } from '../../../services/pins.service';
+import { NgIf } from '@angular/common';
+import { ReportService } from '../../../services/report.service';
+import { Report } from '../../../interfaces/report';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-map-page',
-  imports: [NavbarComponent],
+  imports: [NavbarComponent,NgIf,DatePipe],
   templateUrl: './map-page.component.html',
   styleUrls: ['./map-page.component.scss']
 })
@@ -19,7 +23,9 @@ export class MapPageComponent implements AfterViewInit{
   private pins:ReportPinDto[]=[];
   private loadedPins = new Set<string>();
 
-  constructor(private pinService:PinsService){}
+  selectedReport: Report | null = null;
+
+  constructor(private pinService:PinsService,private reportService:ReportService){}
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -134,9 +140,24 @@ export class MapPageComponent implements AfterViewInit{
           stick.addTo(this.pinsLayer);
           marker.addTo(this.pinsLayer);
           
+          marker.on('click',()=>{
+            this.reportService.getReportById(pin.reportId).subscribe({
+              next:(data:any)=>{
+                this.selectedReport = {
+                    ...data,
+                    tags: data.tagNames ?? [],
+                    region: data.regionName ?? '',
+                    severity: data.severityLevel ?? '',
+                  };
+              },
+              error:(err)=>{
+                console.log(err);
+              }
+            })
+          });
         });
 
-        console.log(newPins);
+        //console.log(newPins);
       },
       error:(err)=>{
         console.log(err);

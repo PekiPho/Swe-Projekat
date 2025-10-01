@@ -40,10 +40,8 @@ export class ReportService {
     );
   }
 
-  getReportById(reportId: string): Observable<Report> {
-    return this.http.get<Report>(`${this.url}/GetReportById/${reportId}`).pipe(
-      catchError(this.handleError)
-    );
+  getReportById(reportId: string){
+    return this.http.get<any>(`${this.url}/GetReportById/${reportId}`);
   }
 
   getReportsThatUserIsFollowing(username: string, page?: number): Observable<Report[]> {

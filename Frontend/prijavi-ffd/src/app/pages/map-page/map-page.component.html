@@ -1,3 +1,29 @@
 <app-navbar></app-navbar>
 
 <div id="map"></div>
+
+<app-navbar></app-navbar>
+
+<div id="map"></div>
+
+<div class="side-panel" *ngIf="selectedReport">
+  <button class="close-btn" (click)="selectedReport = null">&times;</button>
+
+  <h2>{{ selectedReport.title }}</h2>
+  <p><b>Date:</b> {{ selectedReport.dateOfPost | date:'medium' }}</p>
+  <p><b>Posted by:</b> {{ selectedReport.username }}</p>
+
+  <p><b>Description:</b></p>
+  <p>{{ selectedReport.description }}</p>
+
+  <img *ngIf="selectedReport.mediaIds && selectedReport.mediaIds.length > 0" 
+       [src]="" 
+       alt="Report media" />
+
+  <p><b>Severity:</b> {{ selectedReport.severity }}</p>
+  <p><b>Status:</b> {{ selectedReport.resolutionStatus ? selectedReport.resolutionStatus : 'unsolved' }}</p>
+
+  <p><b>Region:</b> {{ selectedReport.region }}</p>
+
+  <p><b>Tags:</b> {{ selectedReport.tags?.join(', ') }}</p>
+</div>
