@@ -3,14 +3,17 @@ import { NavbarComponent } from '../../navbar/navbar.component';
 import * as L from 'leaflet';
 import { ReportPinDto } from '../../../interfaces/media';
 import { PinsService } from '../../../services/pins.service';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ReportService } from '../../../services/report.service';
 import { Report } from '../../../interfaces/report';
 import { DatePipe } from '@angular/common';
 
+
+type FilterKey = 'tags' | 'regions' | 'severities' | 'resolutionStatuses';
+
 @Component({
   selector: 'app-map-page',
-  imports: [NavbarComponent,NgIf,DatePipe],
+  imports: [NavbarComponent,NgIf,DatePipe,NgFor],
   templateUrl: './map-page.component.html',
   styleUrls: ['./map-page.component.scss']
 })
@@ -73,6 +76,8 @@ export class MapPageComponent implements AfterViewInit{
     const north = bounds.getNorth();
     const west = bounds.getWest();
     const  east = bounds.getEast();
+
+    //console.log(this.currentFilters);
 
     this.pinService.getPinsFiltered(south,north,west,east,
       this.currentFilters.tags,
@@ -164,4 +169,55 @@ export class MapPageComponent implements AfterViewInit{
       }
     });
   }
+
+  showFilters = false;
+  expandedCategory: FilterKey | null = null;
+
+  availableTags = ['electricity','water','road','building','land','other'];
+  availableRegions = ['Beogradski','Istocna Srbija','Juzna Srbija','Zapadna Srbija','Vojvodina','Sumadija'];
+  availableSeverities = ['1','2','3','4','5'];
+  availableResolutions = ['unsolved','solving','solved'];
+
+  tempFilters: Record<FilterKey, string[]> = {
+    tags: [],
+    regions: [],
+    severities: [],
+    resolutionStatuses: []
+  };
+
+  categories: { key: FilterKey; label: string; options: string[] }[] = [
+    { key: 'tags', label: 'Tags', options: this.availableTags },
+    { key: 'regions', label: 'Regions', options: this.availableRegions },
+    { key: 'severities', label: 'Severity', options: this.availableSeverities },
+    { key: 'resolutionStatuses', label: 'Resolution', options: this.availableResolutions }
+  ];
+
+  toggleCategory(cat: FilterKey) {
+    this.expandedCategory = this.expandedCategory === cat ? null : cat;
+  }
+
+  toggleSelection(category: FilterKey, value: string) {
+    const arr = this.tempFilters[category];
+    const index = arr.indexOf(value);
+    if (index === -1) arr.push(value);
+    else arr.splice(index, 1);
+  }
+
+  onToggleSelection(key: FilterKey, value: string) {
+    const arr = this.tempFilters[key];
+    const index = arr.indexOf(value);
+    if (index === -1) arr.push(value);
+    else arr.splice(index, 1);
+  }
+
+
+  applyFilters() {
+    this.currentFilters = { ...this.tempFilters };
+    this.pins = [];
+    this.loadedPins.clear();
+    this.pinsLayer.clearLayers();
+    this.loadPins();
+    this.showFilters = false;
+  }
+
 }

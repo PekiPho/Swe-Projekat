@@ -2,9 +2,34 @@
 
 <div id="map"></div>
 
-<app-navbar></app-navbar>
+<button class="filter-toggle" (click)="showFilters = !showFilters">Filters</button>
 
-<div id="map"></div>
+<div class="filter-panel" *ngIf="showFilters">
+  <div class="filter-row">
+
+    <div class="filter-category-wrapper" *ngFor="let cat of categories">
+        <div class="filter-category" (click)="toggleCategory(cat.key)">
+            {{ cat.label }}
+        </div>
+        <div class="options" *ngIf="expandedCategory === cat.key">
+            <label *ngFor="let option of cat.options">
+            <input
+                type="checkbox"
+                [checked]="tempFilters[cat.key].includes(option)"
+                (change)="onToggleSelection(cat.key, option)"
+            />
+            {{ option }}
+            </label>
+        </div>
+        </div>
+    <button class="apply-filters" (click)="applyFilters()">Apply</button>
+
+  </div>
+</div>
+
+
+
+
 
 <div class="side-panel" *ngIf="selectedReport">
   <button class="close-btn" (click)="selectedReport = null">&times;</button>
