@@ -111,3 +111,18 @@ public class ReportDtoToAdd
     public string RegionName { get; set; } = null!;
     public Pin? Pin { get; set; }
 }
+
+
+public class ReportPinDto
+{
+    public Guid ReportId { get; set; }
+    public double Latitude { get; set; }
+
+    public double Longitude { get; set; }
+
+    public string SeverityLevel { get; set; }
+
+    public string ResolutionStatus { get; set; }
+
+    public List<string> Tags { get; set; }
+}

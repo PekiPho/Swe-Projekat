@@ -45,6 +45,9 @@
   font-size: 0.6em;
   font-weight: bold;
   text-decoration: none;
+
+  position: relative;
+  z-index: 2000;
 }
 
 .btn img {
@@ -64,7 +67,7 @@
 }
 
 .search-bar-wrapper {
-  position: relative; /* anchor for dropdown */
+  position: relative;
 }
 
 .search-bar {
@@ -81,6 +84,11 @@
   height: var(--size);
   padding: 8px;
   transition: width 0.5s ease;
+
+
+  z-index: 1;
+  position: relative;
+  transition: width 0.3s ease,z-index 0s;
 }
 
 .search-bar:focus-within {
@@ -99,6 +107,8 @@
 
 .search-bar:focus-within .search-input {
   opacity: 1;
+
+  z-index: 4000;
 }
 
 .search-submit {
@@ -146,6 +156,8 @@
   margin-top: 0.5rem;
   font-size: 1em;
 }
+
+
 
 @media (max-width: 430px) {
   .first.card {
@@ -215,4 +227,6 @@
     padding: 0.3rem;
     background-color: #fff;
   }
+
+  
 }

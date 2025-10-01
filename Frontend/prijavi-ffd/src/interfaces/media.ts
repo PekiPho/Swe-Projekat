@@ -30,3 +30,13 @@ export interface Severity {
   level: string;
   reports?: Report[];
 }
+
+
+export interface ReportPinDto {
+  reportId: string;
+  latitude: number;
+  longitude: number;
+  severityLevel: string;
+  resolutionStatus: string;
+  tags: string[];
+}

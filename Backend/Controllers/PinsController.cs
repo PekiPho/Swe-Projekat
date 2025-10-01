@@ -1,3 +1,5 @@
+using Backend.Dtos;
+
 namespace Backend.Controllers;
 
 
@@ -31,6 +33,31 @@ public class PinsController : ControllerBase
     }
 
     //Read
+
+    [HttpGet("GetPinsForCoordinates")]
+    public async Task<ActionResult> GetPinsForCoordinates(
+        [FromQuery] double south,
+        [FromQuery] double east,
+        [FromQuery] double north,
+        [FromQuery] double west
+    )
+    {
+        var pins = await Context.Reports.Where(c => c.Pin != null &&
+                                        c.Pin.Latitude >= south && c.Pin.Latitude <= north &&
+                                        c.Pin.Longitude >= west && c.Pin.Longitude <= east)
+                                        .Select(c => new ReportPinDto
+                                        {
+                                            ReportId = c.Id,
+                                            Latitude = c.Pin!.Latitude,
+                                            Longitude = c.Pin!.Longitude,
+                                            SeverityLevel = c.Severity != null ? c.Severity.Level : "1",
+                                            ResolutionStatus = c.ResolutionStatus != null ? c.ResolutionStatus.Status : "unsolved",
+                                            Tags = c.Tags.Select(c => c.Name).ToList()
+                                        }).ToListAsync();
+
+
+        return Ok(pins);
+    }
 
     [HttpGet("GetPinByReport/{reportId}")]
     public async Task<ActionResult> GetPinByReport(Guid reportId)
