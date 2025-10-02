@@ -150,15 +150,31 @@
 }
 
 .username {
-  position: absolute;
-  right: 1rem;
-  top: 0%;
-  margin-top: 0.5rem;
-  font-size: 1em;
+  
+}
+.username-logout-wrapper {
+    position: absolute;
+    top: 0.5rem;      /* od vrha navbara */
+    right: 1rem;      /* od desne ivice navbara */
+
+    display: flex;
+    flex-direction: column;   /* jedno ispod drugog */
+    align-items: flex-end;    /* sve desno */
+    gap: 0.25rem;
+    z-index: 3000;            /* da bude iznad svega */
 }
 
+.username-logout-wrapper .btn-logout {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
 
-
+.username-logout-wrapper .username {
+    font-weight: bold;
+    font-size: 1em;
+    margin: 0;
+}
 @media (max-width: 430px) {
   .first.card {
     font-size: 0.9em;

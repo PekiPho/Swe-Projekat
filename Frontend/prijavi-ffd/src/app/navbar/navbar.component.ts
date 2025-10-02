@@ -86,4 +86,9 @@ export class NavbarComponent implements OnInit {
 
     this.router.navigate(['/search-page',this.query]);
   }
+  logout() {
+  localStorage.clear();
+  this.userService.setUser(null);
+  this.router.navigate(['/get-started']);
+}
 }

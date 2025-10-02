@@ -19,7 +19,7 @@ export class UserService {
   public userSource = new BehaviorSubject<User | null>(null);
   userr$ = this.userSource.asObservable();
 
-  setUser(user: User) {
+  setUser(user: User | null) {
     this.userSource.next(user);
   }
 
