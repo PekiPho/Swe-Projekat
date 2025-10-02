@@ -2,8 +2,9 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angu
 import { CommentService } from '../../../services/comment.service';
 import { UserService } from '../../../services/user.service';
 import { ReportService } from '../../../services/report.service';
+import { MediaService } from '../../../services/media.service';
 import { Observable, of, Subscription, BehaviorSubject } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Report } from '../../../interfaces/report';
@@ -29,17 +30,20 @@ export class BigPostComponent implements OnInit, OnDestroy {
   public comments$: BehaviorSubject<Comment[]> = new BehaviorSubject<Comment[]>([]);
   public media$: Observable<Media[]> = of([]);
   public newCommentText: string = '';
-  
+  public fullScreenImageUrl: string | null = null; 
+
   private currentUser: User | null = null;
   private userSubscription: Subscription | undefined;
 
-  constructor(private commentService: CommentService, private userService: UserService, private reportService: ReportService) {}
+  constructor(
+    private commentService: CommentService, 
+    private userService: UserService, 
+    private reportService: ReportService,
+    private mediaService: MediaService
+  ) {}
 
   ngOnInit(): void {
     if (this.report) {
-      console.log('Severity:', this.report.severity);
-      console.log('Region:', this.report.region);
-
       this.commentService.getCommentsFromReport(this.report.id).pipe(
         catchError(err => {
           console.error('Greška pri učitavanju komentara:', err);
@@ -49,33 +53,40 @@ export class BigPostComponent implements OnInit, OnDestroy {
         this.comments$.next(comments);
       });
 
-      this.media$ = this.getMediaFromReport(this.report.mediaIds || []);
+      this.media$ = this.mediaService.getMediaByReportId(this.report.id).pipe(
+        map(mediaList => mediaList.map(m => {
+          const fullUrl = this.mediaService.getMediaBaseUrl() + m.url;
+          // Dodatna provera za dijagnostiku, uklonite kasnije
+          // console.log('Puna URL adresa slike:', fullUrl); 
+          return {
+            ...m, 
+            url: fullUrl 
+          };
+        })),
+        catchError(err => {
+          console.error('Greška pri učitavanju medija:', err);
+          return of([]);
+        })
+      );
     }
 
     this.userSubscription = this.userService.userr$.subscribe(user => {
       this.currentUser = user;
     });
   }
-  
+
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
   }
 
-  getMediaFromReport(mediaIds: string[]): Observable<Media[]> {
-    if (mediaIds.length === 0) {
-      return of([]);
-    }
-    
-    return of(
-      mediaIds.map(id => ({
-        id: id,
-        url: `https://placehold.co/400x250/E9D5FF/6B46C1?text=Media+ID+${id}`,
-        contentType: 'image',
-        reportId: this.report.id
-      }))
-    );
+  openFullScreen(imageUrl: string): void {
+    this.fullScreenImageUrl = imageUrl;
+  }
+
+  closeFullScreen(): void {
+    this.fullScreenImageUrl = null;
   }
 
   onClose(): void {
@@ -89,7 +100,7 @@ export class BigPostComponent implements OnInit, OnDestroy {
     }
 
     const isFollowing = this.isUserFollowing();
-    
+
     if (isFollowing) {
       this.report.followerUsernames = this.report.followerUsernames!.filter(username => username !== this.currentUser!.username);
       this.reportService.unfollowReport(this.currentUser!.username, this.report.id).subscribe({
@@ -128,7 +139,7 @@ export class BigPostComponent implements OnInit, OnDestroy {
     if (!this.report) {
       return;
     }
-    
+
     const updatedReportDto = {
       resolutionStatus: 'Resolved'
     };
@@ -148,11 +159,11 @@ export class BigPostComponent implements OnInit, OnDestroy {
   onSubmitComment(): void {
     if (this.newCommentText.trim() && this.currentUser && this.currentUser.username && this.report.id) {
       const commentContent = { content: this.newCommentText.trim() };
-      
+
       this.commentService.createComment(this.currentUser.username, this.report.id, commentContent).subscribe({
         next: (response: any) => {
           console.log('Komentar je uspešno poslat.', response);
-          
+
           this.commentService.getCommentsFromReport(this.report.id).pipe(
             catchError(err => {
               console.error('Greška pri ponovnom učitavanju komentara:', err);
@@ -161,7 +172,7 @@ export class BigPostComponent implements OnInit, OnDestroy {
           ).subscribe(comments => {
             this.comments$.next(comments);
           });
-          
+
           this.newCommentText = '';
         },
         error: (err) => {
@@ -180,5 +191,17 @@ export class BigPostComponent implements OnInit, OnDestroy {
       },
       error:(err)=>console.error(err)
     });
+  }
+
+  isDeleteButtonVisible(): boolean {
+    if (!this.currentUser || !this.report) {
+      return false;
+    }
+
+    const userRole = this.currentUser.roleName ? this.currentUser.roleName.toLowerCase() : '';
+    const isAdminOrModerator = userRole === 'admin' || userRole === 'moderator';
+    const isAuthor = this.currentUser.username === this.report.username;
+
+    return isAdminOrModerator || isAuthor;
   }
 }

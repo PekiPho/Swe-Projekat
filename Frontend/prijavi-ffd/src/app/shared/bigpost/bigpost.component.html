@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div class="delete-actions">
+    <div class="delete-actions" *ngIf="isDeleteButtonVisible()">
       <button type="button" class="comment-delete-btn" (click)="onDeleteClick()">Delete</button>
     </div>
 
@@ -48,7 +48,8 @@
         [src]="m.url"
         alt="Situation image"
         class="large-image"
-        onerror="this.src='https://placehold.co/400x250/E9D5FF/6B46C1?text=Image'"
+        (click)="openFullScreen(m.url)"
+        onerror="this.src='https://placehold.co/400x250/E9D5FF/6B46C1?text=Image+Not+Found'"
       />
     </div>
 
@@ -78,5 +79,17 @@
         <button type="submit" class="comment-submit-btn">Post Comment</button>
       </form>
     </div>
+  </div>
+</div>
+
+<div class="full-screen-overlay" *ngIf="fullScreenImageUrl" (click)="closeFullScreen()">
+  <div class="full-screen-content" (click)="$event.stopPropagation()">
+    <img [src]="fullScreenImageUrl" alt="Full resolution image" class="full-screen-image" />
+    <button class="close-btn" (click)="closeFullScreen()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
   </div>
 </div>
