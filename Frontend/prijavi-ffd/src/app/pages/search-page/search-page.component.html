@@ -1,5 +1,7 @@
 <app-navbar></app-navbar>
 
 <div class="search-page-container">
-  
+    <h2>Rezultati za: "{{ searchQuery }}"</h2>
+
+    <app-post-list [reportsFromParent]="reports" [showFilters]="false"></app-post-list>
 </div>

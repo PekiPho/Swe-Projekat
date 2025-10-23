@@ -50,7 +50,7 @@ public class SearchController : ControllerBase
                                         .ToListAsync();
 
         var reportsDto = Mapper.Map<List<ReportDto>>(reports);
-        return Ok(reports);
+        return Ok(reportsDto);
     }
 
 }

@@ -18,8 +18,8 @@ import { SearchService } from '../../../services/search.service';
 })
 export class SearchPageComponent implements OnInit {
   
-  reports$: Observable<Report[] | null> = of(null);
-  searchQuery: string | null = null;
+  reports: Report[] =[];
+  searchQuery: string ='';
   
   constructor(
     private route: ActivatedRoute,
@@ -28,5 +28,27 @@ export class SearchPageComponent implements OnInit {
 
   ngOnInit(): void {
     
+    this.route.paramMap.subscribe(params=>{
+      this.searchQuery=params.get('query') || '';
+      this.doSearch();
+    });
+  }
+
+  doSearch(){
+
+    if(!this.searchQuery){
+      this.reports=[];
+      return;
+    }
+
+    this.searchService.searchReports(this.searchQuery).subscribe({
+      next:(data)=>{
+        this.reports=data;
+      },
+      error:(err)=>{
+        console.log(err);
+        this.reports=[];
+      }
+    })
   }
 }

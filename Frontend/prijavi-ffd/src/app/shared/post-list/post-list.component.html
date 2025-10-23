@@ -1,10 +1,10 @@
 <div class="post-list-container">
-  <div class="header-section">
+  <div class="header-section" *ngIf="showFilters">
     <h2>Sve objave</h2>
   </div>
 
-  <div class="filters-section">
-    <div class="filter-group">
+  <div class="filters-section" >
+    <div class="filter-group" *ngIf="showFilters">
       <label>Filteri:</label>
 
             <select [(ngModel)]="selectedSeverity" (ngModelChange)="onFilterChange($event, 'severity')">
@@ -22,7 +22,7 @@
       </select>
     </div>
 
-        <div class="filter-group tag-filters">
+        <div class="filter-group tag-filters" *ngIf="showFilters">
       <label>Oznake:</label>
       <div class="tag-list">
         <label *ngFor="let tag of tags">

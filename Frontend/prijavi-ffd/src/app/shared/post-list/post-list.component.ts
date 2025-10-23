@@ -20,6 +20,7 @@ import { Region, Severity, Tag } from '../../../interfaces/media';
 export class PostListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() reportsFromParent: Report[] | null = null;
+  @Input() showFilters: boolean = true;
   reports$: Observable<Report[] | null> = of(null);
   selectedReport: Report | null = null;
   
