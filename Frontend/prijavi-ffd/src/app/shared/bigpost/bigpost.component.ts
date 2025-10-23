@@ -53,11 +53,12 @@ export class BigPostComponent implements OnInit, OnDestroy {
         this.comments$.next(comments);
       });
 
+      if (this.report.mediaIds && this.report.mediaIds.length > 0) {
       this.media$ = this.mediaService.getMediaByReportId(this.report.id).pipe(
         map(mediaList => mediaList.map(m => {
-          const fullUrl = this.mediaService.getMediaBaseUrl() + m.url;
-          // Dodatna provera za dijagnostiku, uklonite kasnije
-          // console.log('Puna URL adresa slike:', fullUrl); 
+          const fullUrl = this.mediaService.getMediaBaseUrl() +"/"+ m.url;
+          
+          //console.log('Puna URL adresa slike:', fullUrl); 
           return {
             ...m, 
             url: fullUrl 
@@ -68,6 +69,7 @@ export class BigPostComponent implements OnInit, OnDestroy {
           return of([]);
         })
       );
+      }
     }
 
     this.userSubscription = this.userService.userr$.subscribe(user => {

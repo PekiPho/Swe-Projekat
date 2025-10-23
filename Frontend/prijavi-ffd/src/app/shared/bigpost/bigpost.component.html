@@ -31,7 +31,7 @@
             <span *ngIf="isUserFollowing()">Unfollow</span>
           </button>
 
-          <button *ngIf="report.resolutionStatus !== 'Resolved'" class="resolved-btn" (click)="onResolvedClick()">
+          <button *ngIf="report.resolutionStatus !== 'Resolved' && isDeleteButtonVisible()" class="resolved-btn" (click)="onResolvedClick()">
             Mark as Resolved
           </button>
         </div>
@@ -42,7 +42,7 @@
       <button type="button" class="comment-delete-btn" (click)="onDeleteClick()">Delete</button>
     </div>
 
-    <div class="report-images">
+    <div class="report-images" *ngIf="(media$ | async)?.length || 0 > 0 ">
       <img
         *ngFor="let m of (media$ | async)"
         [src]="m.url"

@@ -1,3 +1,6 @@
+using AutoMapper;
+using Backend.Dtos;
+
 namespace Backend.Controllers;
 
 [ApiController]
@@ -6,16 +9,19 @@ public class MediaController : ControllerBase
 {
     private readonly ApplContext Context;
 
-    public MediaController(ApplContext context)
+    private readonly IMapper Mapper;
+
+    public MediaController(ApplContext context, IMapper mapper)
     {
         Context = context;
+        Mapper = mapper;
     }
 
 
     //Create
 
-    [HttpPost("UploadMedia")]
-    public async Task<ActionResult> UploadMedia([FromForm] List<IFormFile> mediaFiles)
+    [HttpPost("UploadMedia/{reportId}")]
+    public async Task<ActionResult> UploadMedia(Guid reportId,[FromForm] List<IFormFile> mediaFiles)
     {
         if (mediaFiles == null || mediaFiles.Count == 0)
             return NotFound("No Media Files Found");
@@ -33,6 +39,9 @@ public class MediaController : ControllerBase
         if (!Directory.Exists(upload))
             Directory.CreateDirectory(upload);
 
+        var report = await Context.Reports.FindAsync(reportId);
+        if (report == null) return NotFound("Report not found");
+
         foreach (var image in images)
         {
             var newGuid = Guid.NewGuid();
@@ -47,7 +56,8 @@ public class MediaController : ControllerBase
             var file = new Media
             {
                 MediaId = newGuid,
-                Url = $"/uploads/{name}"
+                Url = $"/uploads/{name}",
+                Report=report
             };
 
             await Context.Media.AddAsync(file);
@@ -71,7 +81,8 @@ public class MediaController : ControllerBase
             if (!media.Any())
                 return NotFound("No Media Found");
 
-            return Ok(media);
+            var mediaDto = Mapper.Map<List<MediaDto>>(media);
+            return Ok(mediaDto);
         }
         catch (Exception ex)
         {

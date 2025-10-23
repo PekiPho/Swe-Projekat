@@ -41,9 +41,12 @@
   <p><b>Description:</b></p>
   <p>{{ selectedReport.description }}</p>
 
-  <img *ngIf="selectedReport.mediaIds && selectedReport.mediaIds.length > 0" 
-       [src]="" 
-       alt="Report media" />
+  <div class="map-report-image-container" *ngIf="selectedReport.mediaIds && selectedReport.mediaIds.length > 0">
+    <img 
+      [src]="selectedMedia[0].url" 
+      alt="Report media" 
+      class="map-report-image"/>
+  </div>
 
   <p><b>Severity:</b> {{ selectedReport.severity }}</p>
   <p><b>Status:</b> {{ selectedReport.resolutionStatus ? selectedReport.resolutionStatus : 'unsolved' }}</p>

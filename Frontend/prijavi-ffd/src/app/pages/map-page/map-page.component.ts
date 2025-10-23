@@ -1,12 +1,13 @@
 import { AfterViewChecked, AfterViewInit, Component } from '@angular/core';
 import { NavbarComponent } from '../../navbar/navbar.component';
 import * as L from 'leaflet';
-import { ReportPinDto } from '../../../interfaces/media';
+import { Media, ReportPinDto } from '../../../interfaces/media';
 import { PinsService } from '../../../services/pins.service';
 import { NgFor, NgIf } from '@angular/common';
 import { ReportService } from '../../../services/report.service';
 import { Report } from '../../../interfaces/report';
 import { DatePipe } from '@angular/common';
+import { MediaService } from '../../../services/media.service';
 
 
 type FilterKey = 'tags' | 'regions' | 'severities' | 'resolutionStatuses';
@@ -27,8 +28,9 @@ export class MapPageComponent implements AfterViewInit{
   private loadedPins = new Set<string>();
 
   selectedReport: Report | null = null;
+  selectedMedia: Media[] = [];
 
-  constructor(private pinService:PinsService,private reportService:ReportService){}
+  constructor(private pinService:PinsService,private reportService:ReportService,private mediaService:MediaService){}
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -154,6 +156,20 @@ export class MapPageComponent implements AfterViewInit{
                     region: data.regionName ?? '',
                     severity: data.severityLevel ?? '',
                   };
+
+
+                  if(this.selectedReport!.mediaIds && this.selectedReport!.mediaIds.length > 0){
+                    this.mediaService.getMediaByReportId(this.selectedReport!.id).subscribe({
+                      next: mediaList =>{
+                        this.selectedMedia = mediaList.map(m=>({
+                          ...m,
+                          url:this.mediaService.getMediaBaseUrl() + "/" + m.url
+                        }));
+                      },
+                      error: err => console.log(err)
+                    })
+                  }
+                  else this.selectedMedia=[];
               },
               error:(err)=>{
                 console.log(err);
