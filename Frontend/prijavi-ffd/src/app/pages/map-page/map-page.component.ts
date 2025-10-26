@@ -112,10 +112,10 @@ export class MapPageComponent implements AfterViewInit{
 
           let severityColor = 'green';
           const severity = parseInt(pin.severityLevel || '1', 10);
-          if (severity === 2) severityColor = '#a2d149';
-          else if (severity === 3) severityColor = 'yellow';
-          else if (severity === 4) severityColor = 'orange';
-          else if (severity >= 5) severityColor = 'red';
+          if (severity === 1) severityColor = '#a2d149';
+          else if (severity === 2) severityColor = 'yellow';
+          else if (severity === 3) severityColor = 'orange';
+          else if (severity >= 4) severityColor = 'red';
 
 
           const marker=L.circleMarker([pin.latitude,pin.longitude],{
