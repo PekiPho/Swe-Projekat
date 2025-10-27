@@ -27,9 +27,9 @@
 }
 
 .user-info {
-    /* Dodajemo flex svojstva da kontrolišemo širinu */
+ 
     flex: 1; 
-    min-width: 0; /* Omogućava fleksibilnom elementu da se smanji ispod svoje minimalne širine */
+    min-width: 0; 
     
     border-left: 4px solid #007bff;
     padding-left: 0.75rem;
@@ -45,7 +45,7 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         
-        /* Prelom teksta */
+        
         white-space: normal;
         word-wrap: break-word;
         overflow-wrap: break-word;
@@ -57,7 +57,7 @@
         color: #4B5563;
         margin: 0.25rem 0 0 0;
         
-        /* Prelom teksta */
+        
         white-space: normal;
         word-wrap: break-word;
         overflow-wrap: break-word;
@@ -70,7 +70,7 @@
     align-items: center;
     font-size: 0.85rem;
     padding-right: 6rem;
-    flex-shrink: 0; /* Osigurava da se ova sekcija ne smanjuje */
+    flex-shrink: 0;
 }
 
 .report-severity {

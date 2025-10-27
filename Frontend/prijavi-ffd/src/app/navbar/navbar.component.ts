@@ -48,7 +48,7 @@ export class NavbarComponent implements OnInit {
     var input=event.target as HTMLInputElement;
     this.query=input.value;
 
-    //console.log(this.query);
+    
     if(input.value.length>3){
       this.reports=[];
 
@@ -57,7 +57,7 @@ export class NavbarComponent implements OnInit {
         next:(data)=>{
           this.reports=data;
           this.showSug=true;
-          //console.log(this.reports);
+          
         },
         error:(err)=>{
           console.log(err);
