@@ -157,10 +157,13 @@ public class UserController : ControllerBase
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("OvoJeNasKljucZaEnkriptovanjeKojiUpravoIzmisljamDokPisemAkoNekoOvoCitaZasto?")), SecurityAlgorithms.HmacSha256)
         );
 
+        var userDto = Mapper.Map<UserDto>(user);
+
         return Ok(new
         {
             token = new JwtSecurityTokenHandler().WriteToken(token),
             expiration = token.ValidTo,
+            userDto,
         });
     }
 

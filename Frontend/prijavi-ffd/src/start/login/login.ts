@@ -27,8 +27,8 @@ export class Login {
       this.userService.checkLogin(email,password).subscribe({
         next:(data)=>{
           this.checked=true;
-          this.user=data;
-          this.userService.setUser(data);
+          //this.user=data;
+          this.userService.setUser(data.userDto);
           this.router.navigate(['/main-page']);
         },
         error:(err:HttpResponseBase)=>{

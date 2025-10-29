@@ -9,20 +9,24 @@ namespace Backend.Migrations
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Roles",
-                type: "nvarchar(450)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+{
+    migrationBuilder.AlterColumn<string>(
+        name: "Name",
+        table: "Roles",
+        type: "nvarchar(450)",
+        nullable: false,
+        oldClrType: typeof(string),
+        oldType: "nvarchar(max)");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Roles_Name",
-                table: "Roles",
-                column: "Name",
-                unique: true);
+        migrationBuilder.Sql(@"
+            IF NOT EXISTS (SELECT name 
+                        FROM sys.indexes 
+                        WHERE name = 'IX_Roles_Name' 
+                            AND object_id = OBJECT_ID('Roles'))
+            BEGIN
+                CREATE UNIQUE INDEX [IX_Roles_Name] ON [Roles] ([Name])
+            END
+        ");
         }
 
         /// <inheritdoc />
